@@ -6,10 +6,11 @@ data = []
 
 def load_data():
 	global data
-	f = open('gg2013.json', "r", encoding="utf8")
+	f = open('data/gg2013.json', "r", encoding="utf8")
 	data = f.readlines()
 	f.close()
 	train(data)
+	print(data);p
 
 
 def train(lines):
