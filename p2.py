@@ -12,7 +12,7 @@ def load_data():
 	train(data)
 	
 
-//essentially look for win words and then 
+
 def train(lines):
 	x=[]
 	lines = json.dumps(lines)
