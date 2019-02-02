@@ -10,9 +10,9 @@ def load_data():
 	data = f.readlines()
 	f.close()
 	train(data)
-	print(data);
+	
 
-
+//essentially look for win words and then 
 def train(lines):
 	x=[]
 	lines = json.dumps(lines)
