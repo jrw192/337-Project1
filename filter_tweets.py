@@ -1,20 +1,11 @@
-
 import re
 import sys
-import json
-
-
-def load_data():
-    tweets = []
-    with open('data/gg2013.json') as f:
-        tweets = json.load(f)
-    f.close()
-    return tweets
+from load_data import load_data
 
 
 
 def filter_tweets(tweets, param, caseSensitive=True):
-    #if tweet's text contains the regex expression, add it to the match list
+    #if tweet's text contains the regex expression, add the text of the tweet to the match list
     matches =[]
     for tweet in tweets:
         text = tweet['text']
@@ -24,7 +15,7 @@ def filter_tweets(tweets, param, caseSensitive=True):
             found = re.search(param, text, flags=re.IGNORECASE)
 
         if(found):
-                 matches.append(tweet)
+                 matches.append(tweet["text"])
 
     return matches
 
@@ -32,9 +23,9 @@ def filter_tweets(tweets, param, caseSensitive=True):
 def main():
     tweets = load_data()
     nameMatches = filter_tweets(tweets, 'ARGO', False);
-    print(nameMatches)
     #titleMatches = filter_tweets(nameMatches, 'presenter')
     #print(titleMatches)
+    return nameMatches
 
 
 if __name__ == "__main__":

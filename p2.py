@@ -10,7 +10,7 @@ def load_data():
 	data = f.readlines()
 	f.close()
 	train(data)
-	print(data);p
+	print(data);
 
 
 def train(lines):
