@@ -3,6 +3,8 @@ import nltk
 from nltk.tokenize import TweetTokenizer
 from nltk.tokenize import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer
+
 
 #imports from other files
 from filter_tweets import filter_tweets
@@ -35,11 +37,20 @@ def main(param):
 	#now we want to do stemming/lemmatization on the tokenized text
 	#stem(tokens), or something like that.
 
+	#using stemming:
+	portstem = PorterStemmer()
+	stemmedwords = []
+	for i in sans_stopwords:
+		ports =[]
+		for j in i:
+			ports.append(portstem.stem(j))
+		stemmedwords.append(ports)
+
 	#try feature engineering with n-grams, etc.
 	#---some kind of function here---
 
 	#print(tokenized_matches)
-	print(sans_stopwords)
+	print(stemmedwords)
 	return tokenized_matches
 
 
