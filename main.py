@@ -26,9 +26,11 @@ def main(param):
 	stop_words = list(stopwords.words("english"))
 	sans_stopwords = [] #we could also remove from tokenized_matches
 	for token in tokenized_matches:
+		token_new = []
 		for word in token:
 			if word.lower() not in stop_words:
-				sans_stopwords.append(word)
+				token_new.append(word)
+		sans_stopwords.append(token_new)
 
 	#now we want to do stemming/lemmatization on the tokenized text
 	#stem(tokens), or something like that.
@@ -36,8 +38,8 @@ def main(param):
 	#try feature engineering with n-grams, etc.
 	#---some kind of function here---
 
-	print(tokenized_matches)
-	# print(sans_stopwords)
+	#print(tokenized_matches)
+	print(sans_stopwords)
 	return tokenized_matches
 
 
