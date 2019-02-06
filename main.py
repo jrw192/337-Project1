@@ -42,12 +42,12 @@ def main(param):
 
 	# Stemming
 	portstem = PorterStemmer()
-	stemmedwords = []
+	stem_tokens = []
 	for i in sans_stopwords:
 		ports =[]
 		for j in i:
 			ports.append(portstem.stem(j))
-		stemmedwords.append(ports)
+		stem_tokens.append(ports)
 
 	# Lemmatization
 	lem = WordNetLemmatizer()
@@ -65,7 +65,7 @@ def main(param):
 	#print(tokenized_matches)
 	# print(sans_stopwords)
 	print('Normal: ', sans_stopwords[0], sans_stopwords[1])
-	print('Stem: ', stemmedwords[0], stemmedwords[1])
+	print('Stem: ', stem_tokens[0], stem_tokens[1])
 	print('Lem: ', lem_tokens[0], lem_tokens[1])
 	return tokenized_matches
 
