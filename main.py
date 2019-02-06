@@ -4,7 +4,7 @@ from nltk.tokenize import TweetTokenizer
 from nltk.tokenize import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
-
+from nltk.stem.wordnet import WordNetLemmatizer
 
 #imports from other files
 from filter_tweets import filter_tweets
@@ -24,6 +24,9 @@ def main(param):
 	for match in matches:
 		tokenized_matches.append(tt.tokenize(match))
 
+	# we probably want to remove stopwords and do stemming/lemmatization after we search for award names,
+	# so they don't get distorted
+
 	#remove stop words
 	stop_words = list(stopwords.words("english"))
 	sans_stopwords = [] #we could also remove from tokenized_matches
@@ -37,7 +40,7 @@ def main(param):
 	#now we want to do stemming/lemmatization on the tokenized text
 	#stem(tokens), or something like that.
 
-	#using stemming:
+	# Stemming
 	portstem = PorterStemmer()
 	stemmedwords = []
 	for i in sans_stopwords:
@@ -46,11 +49,24 @@ def main(param):
 			ports.append(portstem.stem(j))
 		stemmedwords.append(ports)
 
+	# Lemmatization
+	lem = WordNetLemmatizer()
+	lem_tokens = []
+
+	for token in sans_stopwords:
+		token_new = []
+		for word in token:
+			token_new.append(lem.lemmatize(word,"v"))
+		lem_tokens.append(token_new)
+
 	#try feature engineering with n-grams, etc.
 	#---some kind of function here---
 
 	#print(tokenized_matches)
-	print(stemmedwords)
+	# print(sans_stopwords)
+	print('Normal: ', sans_stopwords[0], sans_stopwords[1])
+	print('Stem: ', stemmedwords[0], stemmedwords[1])
+	print('Lem: ', lem_tokens[0], lem_tokens[1])
 	return tokenized_matches
 
 
