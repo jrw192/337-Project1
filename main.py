@@ -1,9 +1,11 @@
 #python library imports
 import nltk
+import string
 from nltk.tokenize import TweetTokenizer
 from nltk.tokenize import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
+
 
 
 #imports from other files
@@ -25,7 +27,7 @@ def main(param):
 		tokenized_matches.append(tt.tokenize(match))
 
 	#remove stop words
-	stop_words = list(stopwords.words("english"))
+	stop_words = list(stopwords.words("english")) + list(string.punctuation)
 	sans_stopwords = [] #we could also remove from tokenized_matches
 	for token in tokenized_matches:
 		token_new = []
