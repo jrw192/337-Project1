@@ -22,9 +22,10 @@ def filter_tweets(tweets, param, caseSensitive=True):
 
 def main():
     tweets = load_data()
-    nameMatches = filter_tweets(tweets, 'ARGO', False);
+    nameMatches = filter_tweets(tweets, 'mychael danna', False);
     #titleMatches = filter_tweets(nameMatches, 'presenter')
     #print(titleMatches)
+    print(nameMatches)
     return nameMatches
 
 
