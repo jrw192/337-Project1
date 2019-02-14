@@ -53,7 +53,7 @@ def find_award(text):
 			break
 	if len(awardName) == 1:
 		return None
-		
+
 	awardName = " ".join(awardName)
 	print(awardName)
 	return awardName
