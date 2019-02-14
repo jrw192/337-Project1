@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 from imdb import IMDb
 from imdb.Person import Person
 import nltk
@@ -20,8 +21,35 @@ def imdb_name_search(query):
 def clean_tweet(tweet):
 	print("cleaning tweet....")
 	cleaned = re.sub(r'#[\w]+', '',tweet) #remove all hashtags 
+
+	#1: if @ preceded by RT, remove word
+	if "RT" in tweet:
+		cleaned = re.sub(r'^RT\s@\S+\s', '', cleaned) #remove 'RT @sometwitterhandle: ' (i.e. RT format)
+
+	#2: if @ not preceeded by RT, remove @ and split word into 2 parts based on capitalization
+	# iterate through tweet
+	# if you find an @: remove it and split word into 2 based on camelcase
+	else:
+		start = cleaned.find("@")
+		stop = 0
+		while start != -1:
+			stop = cleaned.find(" ", start)
+			temp = camel_case_split(cleaned[start+1: stop]) #remove @ and split camelcase word
+			cleaned = cleaned[:start] + temp + cleaned[stop:]
+			start = cleaned.find("@")
+
 	cleaned = re.sub(r'[^\w\s]','',cleaned) #remove all punctuation characters
 	return cleaned
+
+## split camel case words
+## https://stackoverflow.com/questions/29916065/how-to-do-camelcase-split-in-python
+def camel_case_split(identifier):
+    matches = re.finditer('.+?(?:(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])|$)', identifier)
+    temp = [m.group(0) for m in matches]
+    final = ''
+    for t in temp:
+    	final += t + ' '
+    return final[:-1]
 
 ##find NNP entities in one tweet
 def find_entities(text):
@@ -64,7 +92,17 @@ if __name__ == "__main__":
 	text1 = "Daniel Day-Lewis wins Best Performance Motion Picture."
 	text2 = "i love emily blunt."
 	text3 = "I Love Emily Blunt."
-	find_all_names(text)
+	text4 = "#Congratulations to @BenAffleck for winning the best Director award for Argo at the golden globes!! FANTASTIC MOVIE http://t.co/TZ47heFF"
+	text5 = "Finally, the category we've all been waiting for. Best original score, motion picture: Mychael Danna, Life of Pi. #GoldenGlobes"
+	text6 = "Tina and Amy hosting golden globes ahhhhh let the humor begin"
+
+	#'#Congratulations to @BenAffleck for winning the best Director award for Argo at the golden globes!! FANTASTIC MOVIE http://t.co/TZ47heFF',
+	#		'RT @CNNshowbiz: Best director motion picture #GoldenGlobe awarded to Ben Affleck for "Argo" #GoldenGlobes',
+	#		'@BenAffleck Congratulations‼! Best Director for #Argo! #GoldenGlobes',
+	#		'RT @RajeevMasand: GoldenGlobes: Best Film Drama - Argo!  That is the right choice, baby!',
+	#		'Golden Globes Best Picture (drama) won by Argo, Best Musical/ Comedy taken by Les Miserables with Hugh Jackman as best Actor for his role.'
+
+	find_all_names(text4)
 
 
 
