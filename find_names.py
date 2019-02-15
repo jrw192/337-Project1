@@ -64,13 +64,20 @@ def find_entities(text):
 	return entities
 
 ##try all adjacent pairs of NNP to locate names
-def find_names(entity_list):
-	print("finding names from entity list....")
+def find_names(entity_list, known_names):
+	#print("finding names from entity list....")
 	names = []
 	i = 0
 	while i < (len(entity_list)-1):
 		testName = entity_list[i] + " " + entity_list[i+1]
-		match = imdb_name_search(testName)
+
+		match = False
+		if testName in known_names:
+			print("%s is a known name" % testName)
+			match = testName
+		else:
+			print("cross referencing %s with imdb" % tesTName)
+			match = imdb_name_search(testName)
 		if match :
 			names.append(match)
 			i += 2 #we found a pair of words that form a name, don't use the last name as the next pass' first name
@@ -79,9 +86,9 @@ def find_names(entity_list):
 			i += 1
 	return names
 	
-def find_all_names(text): #takes in the raw text of a tweet, returns a list of actor/actress names identified from the tweet.
+def find_all_names(text, known_names=[] ): #takes in the raw text of a tweet and list of known names, returns a list of actor/actress names identified from the tweet.
 	entities = find_entities(text)
-	names = find_names(entities)
+	names = find_names(entities, known_names)
 	print(names)
 	return names
 

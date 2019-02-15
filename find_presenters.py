@@ -2,6 +2,7 @@ from filter_tweets import filter_tweets
 from find_awards import find_award
 from find_names import find_all_names  #takes in the raw text of a tweet, returns a list of actor/actress names identified from the tweet.
 from load_data import load_data
+
 presenters = {} #presenters = { award_name : {people} }
 #people = { person_name : count }
 
@@ -13,7 +14,8 @@ def find_presenters(tweet_list):
 		award = find_award(tweet)
 		if not award:
 			continue
-		people = find_all_names(tweet)
+		known_people = list(presenters.keys())
+		people = find_all_names(tweet, known_people)
 		if not people:
 			continue
 
