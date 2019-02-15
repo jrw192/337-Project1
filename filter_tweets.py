@@ -20,6 +20,21 @@ def filter_tweets(tweets, param, caseSensitive=True):
     return matches
 
 
+def filter_tweets_temp(tweets, param, caseSensitive=True):
+    #if tweet's text contains the regex expression, add the text of the tweet to the match list
+    matches =[]
+    for tweet in tweets:
+        if(caseSensitive):
+            found =  re.search(param, tweet)
+        else:
+            found = re.search(param, tweet, flags=re.IGNORECASE)
+
+        if(found):
+                 matches.append(tweet)
+
+    return matches
+
+
 def main():
     tweets = load_data()
     nameMatches = filter_tweets(tweets, 'mychael danna', False);
