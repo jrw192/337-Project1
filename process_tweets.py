@@ -40,7 +40,7 @@ def remove_stop_words(tweet_list):
 	return sans_stopwords
 
 ###
-# @param: list of strings
+# @param: list of lists of strings?
 # @return: list of lists of strings?
 ###
 def stem_tweets(tweet_list):
@@ -52,6 +52,17 @@ def stem_tweets(tweet_list):
 			ports.append(portstem.stem(j))
 		stem_tokens.append(ports)
 	return stem_tokens
+
+###
+# @param: list of strings; expects tokenized tweet
+# @return: list of strings
+###
+def stem_tweet(tweet):
+	ps = PorterStemmer()
+	stemmed = []
+	for token in tweet:
+		stemmed.append(ps.stem(token))
+	return stemmed
 
 ###
 # @param: string
@@ -137,7 +148,7 @@ def process_tweets(param):
 
 	# try lemmatization instead
 	lemmatized = lemmatize_tweet_list(sans_stopwords)
-	
+
 	# print("lemmatized:  " + str(lemmatized[:10]))
 	
 
