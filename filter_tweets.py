@@ -37,7 +37,7 @@ def filter_tweets_temp(tweets, param, caseSensitive=True):
 
 def main():
     tweets = load_data()
-    nameMatches = filter_tweets(tweets, 'mychael danna', False);
+    nameMatches = filter_tweets(tweets, 'present', False);
     #titleMatches = filter_tweets(nameMatches, 'presenter')
     #print(titleMatches)
     print(nameMatches)

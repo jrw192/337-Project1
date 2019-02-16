@@ -39,8 +39,9 @@ def find_award(text):
 	#print(text)
 	lemmatized = lemmatize_tweet(text)
 	awardName = []
-	bestIndex = lemmatized.index("best")
-	if not bestIndex:
+	try:
+		bestIndex = lemmatized.index("best")
+	except:
 		return None
 	else:
 		common_following_words = ['award', 'win', 'go', 'buy'] #some common words following the award name, not covered by stop words "best buy"

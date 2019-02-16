@@ -14,7 +14,10 @@ def imdb_name_search(query):
 
 	matches = ia.search_person(query)
 	if len(matches) > 0 :
-		if matches[0]['name'].lower() == query.lower():
+		match = re.sub(r'[^\w\s]', '', matches[0]['name'])
+		print(match)
+		if query.lower() == match.lower():
+			print(match, "found")
 			return matches[0]['name']
 	return None
 
@@ -76,7 +79,7 @@ def find_names(entity_list, known_names):
 			print("%s is a known name" % testName)
 			match = testName
 		else:
-			print("cross referencing %s with imdb" % tesTName)
+			print("cross referencing %s with imdb" % testName)
 			match = imdb_name_search(testName)
 		if match :
 			names.append(match)
@@ -109,7 +112,9 @@ if __name__ == "__main__":
 	#		'RT @RajeevMasand: GoldenGlobes: Best Film Drama - Argo!  That is the right choice, baby!',
 	#		'Golden Globes Best Picture (drama) won by Argo, Best Musical/ Comedy taken by Les Miserables with Hugh Jackman as best Actor for his role.'
 
-	find_all_names(text4)
+	#find_all_names(text4)
+	imdb_name_search('Daniel DayLewis')
+
 
 
 
