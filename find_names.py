@@ -4,13 +4,13 @@ from imdb.Person import Person
 import nltk
 from nltk.tokenize import TweetTokenizer
 import re
+from nltk.corpus import stopwords
 
 
 tt = TweetTokenizer()
 ia = IMDb()
 
 def imdb_name_search(query):
-	print("cross referencing %s with imdb...." % query)
 
 	matches = ia.search_person(query)
 	if len(matches) > 0 :
@@ -22,7 +22,6 @@ def imdb_name_search(query):
 	return None
 
 def clean_tweet(tweet):
-	print("cleaning tweet....")
 	cleaned = re.sub(r'#[\w]+', '',tweet) #remove all hashtags 
 
 	#1: if @ preceded by RT, remove word
@@ -56,7 +55,6 @@ def camel_case_split(identifier):
 
 ##find NNP entities in one tweet
 def find_entities(text):
-	print("finding entities in tweet....")
 	entities = []
 	cleaned = clean_tweet(text)
 	tokenized = tt.tokenize(cleaned)
@@ -64,11 +62,18 @@ def find_entities(text):
 	for item in tagged:
 		if item[1] == "NNP":
 			entities.append(item[0])
+	non_names = ['golden', 'globes', 'red', 'carpet', 'rt', 'nbc', 'tnt', 'enews', 'award', 'best', 'actor', 'actress', 'film', 'picture'] + list(stopwords.words("english"))
+	lower_entities = [item.lower() for item in entities]
+	for non in non_names:
+		if non in lower_entities:
+			nonIndex = lower_entities.index(non)
+			#print("entities: %s, lower_entities: %s, non: %s, nonIndex: %s" % (entities, lower_entities, non, nonIndex))
+			entities.pop(nonIndex)
+			lower_entities.pop(nonIndex)
 	return entities
 
 ##try all adjacent pairs of NNP to locate names
 def find_names(entity_list, known_names):
-	#print("finding names from entity list....")
 	names = []
 	i = 0
 	while i < (len(entity_list)-1):

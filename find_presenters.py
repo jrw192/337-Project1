@@ -11,16 +11,18 @@ import re
 def find_presenters(tweet_list):
 	presenters = {} #presenters = { award_name : {people} }
 	#people = { person_name : count }
-	known_people = []
+	known_names = []
 
 
 	presenter_tweets = filter_tweets(tweet_list, 'present[a-z]*', caseSensitive=False)
 	print(len(presenter_tweets))
 	for tweet in presenter_tweets:
 		#print(tweet)
-		award = find_award(tweet)
+		
+		award = find_award(tweet, known_names)
 		if not award:
 			continue
+
 
 		#we don't want names that come after the word "to" e.g. "presented to xxx"
 		toIndex = re.search(r'\bto\b', tweet)
@@ -29,12 +31,13 @@ def find_presenters(tweet_list):
 		else:
 			toIndex = toIndex.start()
 
-		people = find_all_names(tweet[:toIndex], known_people)
+		people = find_all_names(tweet[:toIndex], known_names)
 		if not people:
 			continue
-			
-		known_people += people
 
+		known_names += people
+
+		
 		if award in presenters:
 			curPeople = presenters[award]
 			for person in people:

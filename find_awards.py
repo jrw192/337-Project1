@@ -32,7 +32,7 @@ def lemmatize_tweet(tweet):
 #e.g. "she won best actress" or "winner of best actress is amy adams"
 #therefore we do not want to remove all stop words since they tell us when we reach the end of the award name
 #so let's find the word "best", and then add all words from the string until we get to a stopword or the end of the cleaned tweet
-def find_award(text):
+def find_award(text, known_names):
 	#print("finding award name....")
 	text = clean_tweet(text).lower()
 	text = tt.tokenize(text)
@@ -45,14 +45,14 @@ def find_award(text):
 		return None
 	else:
 		common_following_words = ['award', 'win', 'go', 'buy'] #some common words following the award name, not covered by stop words "best buy"
-		stop_words = list(stopwords.words("english")) + list(string.punctuation)
+		stop_words = list(stopwords.words("english")) + list(string.punctuation) + common_following_words + known_names
 		for i in range(bestIndex, len(lemmatized)):
 			test = ps.stem(lemmatized[i]) #stem individual test words, stemming entire text fucks literally everything up
 			if test not in stop_words and test not in common_following_words:
 				awardName.append(lemmatized[i])
 				continue
 			break
-	if len(awardName) == 1:
+	if len(awardName) == 1 or awardName[1].lower() == 'personality' or 'dress' in awardName[1].lower():
 		return None
 
 	awardName = " ".join(awardName)
