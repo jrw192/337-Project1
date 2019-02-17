@@ -6,6 +6,11 @@ from nltk.tokenize import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 from nltk.stem.wordnet import WordNetLemmatizer
+from find_nominated_people import *
+from find_names import *
+from find_films import *
+from find_hosts import *
+from find_presenters import *
 
 
 #imports from other files
@@ -23,16 +28,18 @@ def findwinner(dicts, original,limit):
 
 	strings=""
 	for i in wins:
-		
+		h={}
 		if "–" in i:
 			gemp= i.replace("– ", "")
 			strings=gemp
 		else:
 			strings=i
+
 		tokens=[]
 		splits=[]
 		splits2=[]
 		splits3=[]
+		textss=""
 		splits=strings.split()
 		for word in strings.split():
 		 	splits2.append(word.lower())
@@ -48,6 +55,7 @@ def findwinner(dicts, original,limit):
 					for j in token:
 						if j.lower() == "wins" or j.lower() == "won":
 							tokens.append(token)
+				textss=textss.append(token)
 			elif (splits3 in " ".join(token)):
 				for j in token:
 					j=j.lower()
@@ -62,12 +70,25 @@ def findwinner(dicts, original,limit):
 						for j in token:
 							if "tv" == j or "television" ==j:
 								tokens.append(token)
+				textss=textss.append(token)
 
+		#sending it off to the other functions, turning it into one long string of texts so other functions can read it
+		# textss is all the tweets that talk about each category and ptextss is just a copy of what's in textss
+		#uncomment below for other functions
+		# ptextss=""
+		# for i in textss:
+		# 	for j in i:
+		# 		ptextss=" ".join(j)
+		# ptextss+=ptextss
 
-		
-
-		wins[i]={"Winner":goesto(tokens, strings)}
+		wins[i]={"Winner":goesto(tokens, strings)
+			#uncomment below to see for other functions, 
+			# "Nominees" : find_nominees(ptextss)
+			# "Presenters":associate_presenters_awards(ptextss)
+			# "Hosts": find_hosts(ptextss)
+		}
 	print(wins)
+
 
 
 	
@@ -82,7 +103,8 @@ def goesto(texts, category):
 	index5=0
 	index6=0
 
-	stop_wordss=list(string.punctuation) + [" , ", "..." ,"…", "for", "RT", "go", "way", "SURPRISE", 'NOT',"A" ]+list(stopwords.words("english"))
+	stop_wordss=list(string.punctuation) + [" , ", "..." ,"…", "for", "RT", "go", "way", "SURPRISE", 'NOT',"A", "FUCK"]+list(stopwords.words("english"))
+	news=["BBC","FOX","ABC"]
 	for text in texts:
 		for low in text:
 			low=low.lower()
@@ -99,7 +121,11 @@ def goesto(texts, category):
 						if "_" in i:
 							pass
 						else:
-							winn.append(i)
+							for j in news:
+								if j.upper() in i.upper():
+									pass
+								else:
+									winn.append(i)
 					else:
 						winn.append(i)
 		else:
@@ -113,7 +139,11 @@ def goesto(texts, category):
 						if "_" in i:
 							pass
 						else:
-							winn.append(i)
+							for j in news:
+								if j.upper() in i.upper():
+									pass
+								else:
+									winn.append(i)
 					else:
 						winn.append(i)
 			if "won" in text:
@@ -125,7 +155,11 @@ def goesto(texts, category):
 						if "_" in i:
 							pass
 						else:
-							winn.append(i)
+							for j in news:
+								if j.upper() in i.upper():
+									pass
+								else:
+									winn.append(i)
 					else:
 						winn.append(i)
 
@@ -146,11 +180,16 @@ def goesto(texts, category):
 	#print(winnerss)
 
 	maximum= max(winnerss.values())
-	winner_name = " ".join([k for k, v in winnerss.items() if v == maximum])
+	
+	winner_names = (" ".join([k for k, v in winnerss.items() if v == maximum])).replace("@","")
+	
+		
+
+	#print(winner_names)
 
 
 
-	return winner_name
+	return winner_names
 
 
 
