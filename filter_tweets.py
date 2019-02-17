@@ -2,8 +2,10 @@ import re
 import sys
 from load_data import load_data
 
-
-
+###
+# @param: list of strings
+# @return: list of strings of just tweet text 
+###
 def filter_tweets(tweets, param, caseSensitive=True):
     #if tweet's text contains the regex expression, add the text of the tweet to the match list
     matches =[]
@@ -19,25 +21,22 @@ def filter_tweets(tweets, param, caseSensitive=True):
 
     return matches
 
-
-def filter_tweets_temp(tweets, param, caseSensitive=True):
-    #if tweet's text contains the regex expression, add the text of the tweet to the match list
-    matches =[]
+###
+# @param: list of strings, date
+# @return: list of strings (maybe just text)
+###
+def filter_tweets_by_date(tweets, time):
+    matches = []
     for tweet in tweets:
-        if(caseSensitive):
-            found =  re.search(param, tweet)
-        else:
-            found = re.search(param, tweet, flags=re.IGNORECASE)
-
-        if(found):
-                 matches.append(tweet)
-
+        time = tweet['timestamp']
+        if int(time) < time:
+            matches.append(tweet['text'])
     return matches
 
 
 def main():
     tweets = load_data()
-    nameMatches = filter_tweets(tweets, 'present', False);
+    nameMatches = filter_tweets(tweets, 'mychael danna', False);
     #titleMatches = filter_tweets(nameMatches, 'presenter')
     #print(titleMatches)
     print(nameMatches)
