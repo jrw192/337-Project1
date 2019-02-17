@@ -1,4 +1,6 @@
 # -*- coding: UTF-8 -*-
+from collections import Counter
+
 #imports from other files
 from filter_tweets import filter_tweets_temp
 from find_names import find_all_names
