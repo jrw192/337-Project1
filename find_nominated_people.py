@@ -7,57 +7,58 @@ from nltk.stem import PorterStemmer
 from nltk.stem.wordnet import WordNetLemmatizer
 import string
 import re
+from process_tweets import lemmatize_tweet, stem_tweet
+from find_names import *
 
 tt = TweetTokenizer()
 ia = IMDb()
 ps = PorterStemmer()
 stop_words = list(stopwords.words("english")) + list(string.punctuation)
 
+ia = IMDb()
 
-def clean_tweet(tweet):
-	#print("cleaning tweet....")
-	cleaned = re.sub(r'[#@][\w]+', '',tweet) #remove all hashtags and tagged users
-	cleaned = re.sub(r'[^\w\s]','',cleaned) #remove all punctuation (non alphanumeric) characters
-	return cleaned
+###
+# @param: list of dictionary
+# @return: string
+###
+def imdb_name_search(query):
+	print("cross referencing %s with imdb...." % query)
 
-def lemmatize_tweet(tweet):
-	lem = WordNetLemmatizer()
-	lemmatized = []
+	matches = ia.search_person(query)
+	if len(matches) > 0 :
+		if matches[0]['name'].lower() == query.lower():
+			return matches[0]['name']
+	return None
 
-	for token in tweet:
-		lemmatized.append(lem.lemmatize(token,"v"))
-	return lemmatized
-
-#usually, award is either at the end of the tweet, or is followed by "is", or sometimes followed by "award/awarded to", or "goes to"
-#e.g. "she won best actress" or "winner of best actress is amy adams"
-#therefore we do not want to remove all stop words since they tell us when we reach the end of the award name
-#so let's find the word "best", and then add all words from the string until we get to a stopword or the end of the cleaned tweet
-def find_award(text):
+###
+# @param: tweet - string
+# @return: list of names or None
+###
+def find_nominees(tweet):
 	#print("finding award name....")
-	text = clean_tweet(text).lower()
+	text = clean_tweet(tweet).lower()
 	text = tt.tokenize(text)
-	#print(text)
-	lemmatized = lemmatize_tweet(text)
-	awardName = []
-	try:
-		bestIndex = lemmatized.index("best")
-	except:
-		return None
-	else:
-		common_following_words = ['award', 'win', 'go', 'buy'] #some common words following the award name, not covered by stop words "best buy"
-		stop_words = list(stopwords.words("english")) + list(string.punctuation)
-		for i in range(bestIndex, len(lemmatized)):
-			test = ps.stem(lemmatized[i]) #stem individual test words, stemming entire text fucks literally everything up
-			if test not in stop_words and test not in common_following_words:
-				awardName.append(lemmatized[i])
-				continue
-			break
-	if len(awardName) == 1:
-		return None
 
-	awardName = " ".join(awardName)
-	print(awardName)
-	return awardName
+	lemmatized = lemmatize_tweet(text)
+	nomin = str("nomin")
+	nomin_found = False
+
+  # stem all
+	stemmed = stem_tweet(text)
+	if "nomin" in stemmed or "nomine" in stemmed:
+		nomin_found = True
+
+	nominee_dict = {}
+	if nomin_found:
+		nominee_names = find_all_names(tweet)
+		nominee_dict = {}
+		for name in nominee_names:
+			nominee_dict[name] = 0
+	
+	return nominee_dict
+
+def filter_tweets_by_time(time):
+	return None
 
 
 	
@@ -74,13 +75,10 @@ if __name__ == "__main__":
 			'@BenAffleck Congratulations‼! Best Director for #Argo! #GoldenGlobes',
 			'RT @CNNshowbiz: Best supporting actor, motion picture goes to Christoph Waltz for "Django Unchained" #GoldenGlobes',
 			'RT @goldenglobes: Best Original Score - Mychael Danna - Life of Pi - #GoldenGlobes',
+			'nominees are Amy Adams and Emily Blunt'
 			]
 	for tweet in tweets:
-		find_award(tweet)
-
-
-
-
+		find_nominees(tweet)
 
 
 
