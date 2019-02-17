@@ -57,6 +57,13 @@ def findwinner(dicts, original,limit):
 					for j in token:
 						if j.lower() == "wins" or j.lower() == "won":
 							tokens.append(j)
+				elif "tv" in splits3:
+					if "goes" in token and "to" in token and len(token)>2:
+						for j in token:
+							if "tv" == j or "television" ==j:
+								tokens.append(token)
+
+
 		
 
 		wins[i]={"Winner":goesto(tokens, strings)}
