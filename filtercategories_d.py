@@ -13,7 +13,7 @@ def filter_tweets(tweets, param, caseSensitive=True):
 
 
 def main():
-    tweets = load_data()
+    tweets = load_data(year)
     return nameMatches
 
 
