@@ -15,9 +15,9 @@ from nltk.stem.wordnet import WordNetLemmatizer
 from filtercategories_d import filter_tweets
 from loaddatscategories_d import load_data
 from findwinners_d import findwinner
-from findnominations_d import findnoms
+#from findnominations_d import findnoms
 
-def main():
+def mains():
 	tweets = load_data()
 	matches = filter_tweets(tweets, False)
 	tt = TweetTokenizer() 
@@ -89,4 +89,4 @@ def main():
 
 
 if __name__ == "__main__":
-	main()
+	mains()
