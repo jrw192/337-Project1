@@ -18,6 +18,7 @@ from findawardcategories_d import mains
 from find_categories import categoriess
 from load_data import load_data
 from find_presenters import find_all_presenters
+from find_hosts import find_host
 
 
 def main(year):
@@ -29,23 +30,57 @@ def main(year):
 	
 	presenters = find_all_presenters(tweets, awards) #returns dictionary, of awards keys with associated presenters as values
 
-	results = {}
-	
+
 	time = find_start_time(tweets, "golden globes")
 	rel_tweets = filter_tweets_by_time(tweets, time)
-	results['nominees'] = find_all_nominees(rel_tweets, awards)
+	nominees = find_all_nominees(rel_tweets, awards)
+	hosts = find_host(tweets)
 
-	# dicts={}
-	# final={"Host":[]} #function for host
-	# awardname={}
-	# for i in awards:
-	# 	awardname[i]={"Presenters":[],
-	# 				  "Nominees":[],
-	# 				  "Winner": winners[i]}
-	
 
-	# print(awardname)
+
+	#find best and worst dressed
+	temp_tuple = find_best_worst_dressed(tweets) # returns a tuple (best_dressed, worst_dressed)
+	best_dressed = temp_tuple[0]
+	worst_dressed = temp_tuple[1]
+
+	dressed = {}
+	dressed['best'] = best_dressed
+	dressed['worst'] = worst_dressed
+
+	results = {}
+	results['hosts'] = hosts
+
+	for award in awards:
+		award_winner = winners[award]
+		award_presenter = presenters[award]
+		award_nominees = nominees[award]
+
+		award_dict = {}
+		award_dict['winners'] = award_winner
+		award_dict['presenters'] = award_presenter
+		award_dict['nominees'] = award_nominees
+
+
+		results[award] = award_dict
 	
+	print(results)
+	return results
+
+
+
+
+def best_worst_to_string(lst):
+	count = 0
+	result = ''
+	for item in lst:
+		if count == 0:
+			result = item
+		elif count == 1:
+			result = result + ', ' + item
+		else:
+			result = result + ' and ' + item
+		count += 1
+	return result
 
 
 
@@ -53,4 +88,4 @@ def main(year):
 
 
 if __name__ == "__main__":
-	main()
+	main('2013')
