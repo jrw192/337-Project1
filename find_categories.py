@@ -17,7 +17,7 @@ from loaddatscategories_d import load_data
 from findwinners_d import findwinner
 
 
-def categoriess():
+def categoriess(year):
 	tweets = load_data(year)
 	matches = filter_tweets(tweets, False)
 	tt = TweetTokenizer() 

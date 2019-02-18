@@ -3,7 +3,7 @@ import sys
 #load_data
 def load_data(year):
     tweets = []
-    with open('data/gg' + 2013 + '.json') as f:
+    with open('data/gg' + year + '.json') as f:
         tweets = json.load(f)
     f.close()
     

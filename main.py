@@ -19,26 +19,35 @@ from find_categories import categoriess
 from load_data import load_data
 from find_presenters import find_all_presenters
 from find_hosts import find_host
+from find_award_time import find_start_time
+from filter_tweets import filter_tweets_by_time
+from find_nominees import find_all_nominees
+from find_best_dressed import find_best_worst_dressed
+
 
 
 def main(year):
 	tweets = load_data(year)
 
-
-	awards=categoriess() #list of awards
-	winners=mains() #dictionary, of awards keys with associated winners as values
+	print('GETTING AWARDS')
+	awards=categoriess(year) #list of awards
+	print('GETTING WINNERS')
+	winners=mains(year) #dictionary, of awards keys with associated winners as values
 	
+	print('GETTING PRESENTERS')
 	presenters = find_all_presenters(tweets, awards) #returns dictionary, of awards keys with associated presenters as values
 
 
-	time = find_start_time(tweets, "golden globes")
-	rel_tweets = filter_tweets_by_time(tweets, time)
-	nominees = find_all_nominees(rel_tweets, awards)
+	# time = find_start_time(tweets, "golden globes")
+	# rel_tweets = filter_tweets_by_time(tweets, time)
+	# nominees = find_all_nominees(rel_tweets, awards)
+	print('GETTING HOSTS')
 	hosts = find_host(tweets)
 
 
 
 	#find best and worst dressed
+	print('GETTING BEST/WORST DRESSED')
 	temp_tuple = find_best_worst_dressed(tweets) # returns a tuple (best_dressed, worst_dressed)
 	best_dressed = temp_tuple[0]
 	worst_dressed = temp_tuple[1]
@@ -47,18 +56,19 @@ def main(year):
 	dressed['best'] = best_dressed
 	dressed['worst'] = worst_dressed
 
+	print('FORMATTING DATA')
 	results = {}
 	results['hosts'] = hosts
 
 	for award in awards:
 		award_winner = winners[award]
 		award_presenter = presenters[award]
-		award_nominees = nominees[award]
+		# award_nominees = nominees[award]
 
 		award_dict = {}
 		award_dict['winners'] = award_winner
 		award_dict['presenters'] = award_presenter
-		award_dict['nominees'] = award_nominees
+		# award_dict['nominees'] = award_nominees
 
 
 		results[award] = award_dict
