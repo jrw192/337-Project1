@@ -18,19 +18,6 @@ stop_words = list(stopwords.words("english")) + list(string.punctuation)
 ia = IMDb()
 
 ###
-# @param: list of dictionary
-# @return: string
-###
-def imdb_name_search(query):
-	print("cross referencing %s with imdb...." % query)
-
-	matches = ia.search_person(query)
-	if len(matches) > 0 :
-		if matches[0]['name'].lower() == query.lower():
-			return matches[0]['name']
-	return None
-
-###
 # @param: tweet - string
 # @return: list of names or None
 ###
