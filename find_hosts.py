@@ -4,14 +4,14 @@
 from random import randint
 
 #imports from other files
-from filter_tweets import filter_tweets_temp
+from filter_tweets import filter_tweets
 from find_names import find_all_names
 
 
 def find_host(tweets):
 
 	# get matches w host in tweet
-	matches = filter_tweets_temp(tweets, 'host', False)
+	matches = filter_tweets(tweets, 'host', False)
 	# matches = filter_tweets(tweets, 'host', False)
 	#matches = matches[:40]
 	known_names = []

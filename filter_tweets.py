@@ -83,36 +83,6 @@ def filter_tweets_by_time(tweets, time):
     return matches
 
 
-# Temporary to test find_hosts
-def filter_tweets_temp(tweets, param, caseSensitive=True):
-    #if tweet's text contains the regex expression, add the text of the tweet to the match list
-    matches =[]
-    for tweet in tweets:
-        if(caseSensitive):
-            found =  re.search(param, tweet)
-        else:
-            found = re.search(param, tweet, flags=re.IGNORECASE)
-
-        if(found):
-                 matches.append(tweet)
-    return matches
-
-
-# Temporary to test best_dressed
-def filter_tweets_remove_temp(tweets, param, caseSensitive=True):
-    #if tweet's text contains the regex expression, add the text of the tweet to the match list
-    matches =[]
-    for tweet in tweets:
-        if(caseSensitive):
-            found =  re.search(param, tweet)
-        else:
-            found = re.search(param, tweet, flags=re.IGNORECASE)
-
-        if(not found):
-                 matches.append(tweet)
-    return matches
-
-
 ## Takes too long to filter all tweets out
 # def filter_tweets_by_language(tweets):
 #     DetectorFactory.seed = 0 #enforce consistent results

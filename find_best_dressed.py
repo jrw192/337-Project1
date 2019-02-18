@@ -3,7 +3,7 @@ from collections import Counter
 from random import randint
 
 #imports from other files
-from filter_tweets import filter_tweets, filter_tweets_remove_temp
+from filter_tweets import filter_tweets, filter_tweets_strings_remove
 from find_names import find_all_names
 
 
@@ -50,7 +50,7 @@ def best_dressed(tweets):
 	# matches = filter_tweets(tweets, 'host', False)
 
 	# remove tweets with 'worst' --> just makes it easier
-	matches = filter_tweets_remove_temp(matches, 'worst dressed', False)
+	matches = filter_tweets_strings_remove(matches, 'worst dressed', False)
 
 	# randomize tweets
 	matches = randomize_list(matches, 50)
@@ -66,7 +66,7 @@ def worst_dressed(tweets):
 	# matches = filter_tweets(tweets, 'host', False)
 
 	# remove tweets with 'worst' --> just makes it easier
-	matches = filter_tweets_remove_temp(matches, 'best dressed', False)
+	matches = filter_tweets_strings_remove(matches, 'best dressed', False)
 
 	# randomize tweets
 	matches = randomize_list(matches, 50)
