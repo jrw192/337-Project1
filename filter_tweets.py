@@ -44,15 +44,15 @@ def filter_tweets_remove(tweets, param, caseSensitive=True):
     return matches
 
 ###
-# @param: list of strings, date
-# @return: list of strings (maybe just text)
+# @param: tweets - list of dictionaries, time - int
+# @return: list of strings
 ###
-def filter_tweets_by_date(tweets, time):
+def filter_tweets_by_time(tweets, time):
     matches = []
     for tweet in tweets:
-        time = tweet['timestamp']
-        if int(time) < time:
-            matches.append(tweet['text'])
+        tweet_time = tweet['timestamp_ms']
+        if time > tweet_time:
+            matches.append(tweet)
     return matches
 
 
