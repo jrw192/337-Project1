@@ -79,7 +79,7 @@ def filter_tweets_by_time(tweets, time):
     for tweet in tweets:
         tweet_time = tweet['timestamp_ms']
         if time > tweet_time:
-            matches.append(tweet)
+            matches.append(tweet['text'])
     return matches
 
 

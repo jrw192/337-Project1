@@ -31,8 +31,9 @@ def main(year):
 
 	results = {}
 	
-
-
+	time = find_start_time(tweets, "golden globes")
+	rel_tweets = filter_tweets_by_time(tweets, time)
+	results['nominees'] = find_all_nominees(rel_tweets, awards)
 
 	# dicts={}
 	# final={"Host":[]} #function for host

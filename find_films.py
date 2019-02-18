@@ -15,7 +15,7 @@ ps = PorterStemmer()
 stop_words = list(stopwords.words("english")) + list(string.punctuation)
 
 def imdb_film_search(query):
-	print("cross referencing %s with imdb...." % query)
+	# print("cross referencing %s with imdb...." % query)
 
 	matches = ia.search_movie(query)
 	if len(matches) > 0 :
@@ -25,7 +25,7 @@ def imdb_film_search(query):
 	return None
 
 def clean_tweet(tweet):
-	print("cleaning tweet....")
+	# print("cleaning tweet....")
 	cleaned = re.sub(r'[#@][\w]+', '',tweet) #remove all hashtags 
 	cleaned = re.sub(r'http://.+', '', cleaned) #remove all links
 	cleaned = re.sub(r'[^\w\s]', '', cleaned) #remove all punctuation characters
@@ -47,13 +47,13 @@ def find_entities(text):
 ##try n-grams of words
 def find_names(text, entities):
 	#print("finding names from entity list....")
-	common_award_words = ['director', 'best', 'picture', 'film', 'movie']
+	# common_award_words = ['director', 'best', 'picture', 'film', 'movie', 'television']
 	names = []
 	cleaned = clean_tweet(text)
 	tokenized = tt.tokenize(cleaned)
 	for entity in entities:
 		#print("testing entity: %s" % entity)
-		if entity.lower() not in common_award_words:
+		# if entity.lower() not in common_award_words:
 			newTokens = tokenized[tokenized.index(entity):]
 			#print(newTokens)
 			title = []
@@ -65,7 +65,7 @@ def find_names(text, entities):
 					#print("searching film title: " , title)
 					if imdb_film_search(" ".join(title)):
 						names.append(" ".join(title))
-	print(names)
+	# print(names)
 	return names
 
 		
