@@ -15,10 +15,10 @@ from nltk.stem.wordnet import WordNetLemmatizer
 from filtercategories_d import filter_tweets
 from loaddatscategories_d import load_data
 from findwinners_d import findwinner
-from findnominations_d import findnoms
 
-def main():
-	tweets = load_data()
+
+def mains(year):
+	tweets = load_data(year)
 	matches = filter_tweets(tweets, False)
 	tt = TweetTokenizer() 
 	tokenized_matches = []
@@ -82,11 +82,11 @@ def main():
 		limit=12
 	else:
 		limit=9
-	findwinner(listawards,tokenized_matches,limit)
+	return findwinner(listawards,tokenized_matches,limit)
 
 
 	
 
 
 if __name__ == "__main__":
-	main()
+	mains()
