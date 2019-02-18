@@ -1,29 +1,43 @@
 from filter_tweets import filter_tweets
+from filter_tweets import filter_tweets_text
+from filter_tweets import filter_tweets_strings_remove
 from find_awards import find_award
 from find_names import find_all_names  #takes in the raw text of a tweet, returns a list of actor/actress names identified from the tweet.
 from load_data import load_data
 import re
+import string
+from nltk.corpus import stopwords
+from nltk.tokenize import TweetTokenizer
+import nltk
+
+tt = TweetTokenizer()
+stop_words = list(stopwords.words("english")) + ['performance', ]
 
 
+def find_award_presenters(tweet_list, award):
+	#award_stripped = re.sub(r'[^\w\s]\s', '', award) #remove all non-alphanumeric
+	award_stripped = award
+	for word in stop_words:
+		award_stripped = award_stripped.replace(" " + word + " ", ' ')
+	award_no_punct = re.sub(r'[^\w\s]', '', award_stripped)
 
+	award_tokenized = tt.tokenize(award_no_punct)
+	all_ngrams = nltk.ngrams(award_tokenized, 2)
+	tweets = tweet_list
+	for token in award_tokenized:
+		#print(token)
+		filtered = filter_tweets_text(tweets, token, caseSensitive=False)
+		if len(filtered) > 0:
+			tweets = filtered
 
-#pass in all tweets, find the presenters associated with each award
-def find_presenters(tweet_list):
-	presenters = {} #presenters = { award_name : {people} }
-	#people = { person_name : count }
+	#tweets = filter_tweets_text(tweet_list, award_stripped, caseSensitive=False) + filter_tweets_text(tweet_list, award, caseSensitive=False) + filter_tweets_text(tweet_list, award_no_punct, caseSensitive=False)
+	print(award_tokenized)
+	print(len(tweets))
+	nameFreqs = {}
 	known_names = []
+	known_awards = []
 
-
-	presenter_tweets = filter_tweets(tweet_list, 'present[a-z]*', caseSensitive=False)
-	print(len(presenter_tweets))
-	for tweet in presenter_tweets:
-		#print(tweet)
-		
-		award = find_award(tweet, known_names)
-		if not award:
-			continue
-
-
+	for tweet in tweets:
 		#we don't want names that come after the word "to" e.g. "presented to xxx"
 		toIndex = re.search(r'\bto\b', tweet)
 		if not toIndex:
@@ -32,33 +46,45 @@ def find_presenters(tweet_list):
 			toIndex = toIndex.start()
 
 		people = find_all_names(tweet[:toIndex], known_names)
-		if not people:
-			continue
-
-		known_names += people
-
+		for person in people:
+			if person in nameFreqs:
+				nameFreqs[person] = nameFreqs[person] + 1
+			else:
+				nameFreqs[person] = 1
 		
-		if award in presenters:
-			curPeople = presenters[award]
-			for person in people:
-				if person in curPeople:
-					curPeople[person] = curPeople[person] + 1
-				else:
-					curPeople[person] = 1
-			presenters[award] = curPeople
-		else:
-			curPeople = {}
-			for person in people:
-				curPeople[person] = 1
-			presenters[award] = curPeople
-	# for key in presenters:
-	# 	print(key)
+	return nameFreqs #returns dictionary of names and frequencies
+
+
+
+
+
+
+
+#pass in all tweets, find the presenters associated with each award
+def find_presenters(tweet_list, awardsList):
+	presenters = {} #presenters = { award_name : {people} }
+	#people = { person_name : count }
+	known_names = []
+	known_awards = []
+
+
+	presenter_tweets = filter_tweets(tweet_list, 'present[a-z]*', caseSensitive=False)
+	presenter_tweets = filter_tweets_strings_remove(presenter_tweets, 'RT', caseSensitive=True)
+	#print(len(presenter_tweets))
+	for award in awardsList:
+		peopleFreqs = find_award_presenters(presenter_tweets, award)
+		presenters[award] = peopleFreqs
+		
+
+
+
+
 	return presenters
 
-def associate_presenters_awards(tweet_list):
-	possible_presenters = find_presenters(tweet_list)
+def associate_presenters_awards(tweet_list, awards_list):
+	possible_presenters = find_presenters(tweet_list, awards_list)
 	final_presenters = {} #final result
-	print(possible_presenters.keys())
+	#print(possible_presenters.keys())
 
 	#TODO: find top 2 most mentioned people for each award, return as awards_presenters
 	for award in possible_presenters:
@@ -90,7 +116,7 @@ def associate_presenters_awards(tweet_list):
 
 if __name__ == "__main__":
 	tweets = load_data()
-	associate_presenters_awards(tweets[:50000])
+	associate_presenters_awards(tweets[:100000])
 
 
 

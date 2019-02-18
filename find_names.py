@@ -15,9 +15,9 @@ def imdb_name_search(query):
 	matches = ia.search_person(query)
 	if len(matches) > 0 :
 		match = re.sub(r'[^\w\s]', '', matches[0]['name'])
-		print(match)
+		#print(match)
 		if query.lower() == match.lower():
-			print(match, "found")
+			#print(match, "found")
 			return matches[0]['name']
 	return None
 
@@ -86,10 +86,10 @@ def find_names(entity_list, known_names):
 
 		match = False
 		if testName in known_names:
-			print("%s is a known name" % testName)
+			#print("%s is a known name" % testName)
 			match = testName
 		else:
-			print("cross referencing %s with imdb" % testName)
+			#print("cross referencing %s with imdb" % testName)
 			match = imdb_name_search(testName)
 		if match :
 			names.append(match)
