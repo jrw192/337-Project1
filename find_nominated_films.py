@@ -1,5 +1,3 @@
-from imdb import IMDb
-from imdb.Person import Person
 import nltk
 from nltk.tokenize import TweetTokenizer
 from nltk.corpus import stopwords
@@ -11,24 +9,7 @@ from process_tweets import lemmatize_tweet, stem_tweet
 from find_films import *
 
 tt = TweetTokenizer()
-ia = IMDb()
 ps = PorterStemmer()
-stop_words = list(stopwords.words("english")) + list(string.punctuation)
-
-ia = IMDb()
-
-###
-# @param: list of dictionary
-# @return: string
-###
-def imdb_name_search(query):
-	print("cross referencing %s with imdb...." % query)
-
-	matches = ia.search_person(query)
-	if len(matches) > 0 :
-		if matches[0]['name'].lower() == query.lower():
-			return matches[0]['name']
-	return None
 
 ###
 # @param: tweet - string
@@ -39,7 +20,6 @@ def find_nominees(tweet):
 	text = clean_tweet(tweet).lower()
 	text = tt.tokenize(text)
 
-	lemmatized = lemmatize_tweet(text)
 	nomin = str("nomin")
 	nomin_found = False
 
@@ -59,8 +39,6 @@ def find_nominees(tweet):
 
 def filter_tweets_by_time(time):
 	return None
-
-
 	
 
 if __name__ == "__main__":
@@ -75,7 +53,8 @@ if __name__ == "__main__":
 			'@BenAffleck Congratulations‼! Best Director for #Argo! #GoldenGlobes',
 			'RT @CNNshowbiz: Best supporting actor, motion picture goes to Christoph Waltz for "Django Unchained" #GoldenGlobes',
 			'RT @goldenglobes: Best Original Score - Mychael Danna - Life of Pi - #GoldenGlobes',
-			'nominees are Amy Adams and Emily Blunt'
+			'nominees are Amy Adams and Emily Blunt',
+      'nominated films are Argo and How to Train Your Dragon'
 			]
 	for tweet in tweets:
 		find_nominees(tweet)
