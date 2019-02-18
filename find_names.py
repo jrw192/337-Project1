@@ -21,14 +21,19 @@ def imdb_name_search(query):
 			return matches[0]['name']
 	return None
 
-def clean_tweet(tweet):
+def clean_tweet(tweet, removeTweetHandles = False):
 	cleaned = re.sub(r'#[\w]+', '',tweet) #remove all hashtags 
 
-	#1: if @ preceded by RT, remove word
-	if "RT" in tweet:
+	#1: for find hosts
+	if removeTweetHandles:
+		cleaned = re.sub(r'\s@\S+\s', '', cleaned) #remove '@sometwitterhandle: ' (i.e. RT format)
+		# because @perezhilton had a popular tweet about worst dressed and was classified as one
+
+	#2: if @ preceded by RT, remove word
+	elif "RT" in tweet:
 		cleaned = re.sub(r'^RT\s@\S+\s', '', cleaned) #remove 'RT @sometwitterhandle: ' (i.e. RT format)
 
-	#2: if @ not preceeded by RT, remove @ and split word into 2 parts based on capitalization
+	#3: if @ not preceeded by RT, remove @ and split word into 2 parts based on capitalization
 	# iterate through tweet
 	# if you find an @: remove it and split word into 2 based on camelcase
 	else:
@@ -54,9 +59,9 @@ def camel_case_split(identifier):
     return final[:-1]
 
 ##find NNP entities in one tweet
-def find_entities(text):
+def find_entities(text, removeTweetHandles):
 	entities = []
-	cleaned = clean_tweet(text)
+	cleaned = clean_tweet(text, removeTweetHandles)
 	tokenized = tt.tokenize(cleaned)
 	tagged = nltk.pos_tag(tokenized)
 	for item in tagged:
@@ -94,8 +99,8 @@ def find_names(entity_list, known_names):
 			i += 1
 	return names
 	
-def find_all_names(text, known_names=[] ): #takes in the raw text of a tweet and list of known names, returns a list of actor/actress names identified from the tweet.
-	entities = find_entities(text)
+def find_all_names(text, known_names=[], removeTweetHandles = False): #takes in the raw text of a tweet and list of known names, returns a list of actor/actress names identified from the tweet.
+	entities = find_entities(text, removeTweetHandles)
 	names = find_names(entities, known_names)
 	print(names)
 	return names

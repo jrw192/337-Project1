@@ -1,30 +1,125 @@
-# -*- coding: UTF-8 -*-
-
 #python library imports
 from collections import Counter
+from random import randint
 
 #imports from other files
-from filter_tweets import filter_tweets_temp, filter_tweets_remove_temp
+from filter_tweets import filter_tweets, filter_tweets_remove_temp
 from find_names import find_all_names
 
 
-def find_best_dressed(tweets):
+def find_best_worst_dressed(tweets):
 
+	best_dict = best_dressed(tweets)
+	worst_dict = worst_dressed(tweets)
+
+	print(best_dict)
+	print(worst_dict)
+
+	# print_results(best_dict)
+	# print_results(worst_dict)
+
+	best = []
+	worst = []
+
+	while len(best) < 3:
+		if best_dict: # if best_dict is not empty
+			x = max(best_dict, key=best_dict.get)
+			best.append(x)
+			del best_dict[x]
+		else:
+			break
+
+	while len(worst) < 3:
+		if worst_dict: # if worst_dict is not empty
+			x = max(worst_dict, key=worst_dict.get)
+			if x not in best: # if person is not already in best dresssed list
+				worst.append(x)
+			del worst_dict[x]
+
+	print(best)
+	print(worst)
+
+	# returns a tuple (can be changed)
+	return best, worst
+
+
+def best_dressed(tweets):
+	
 	# get matches w best dressed in tweet
-	matches = filter_tweets_temp(tweets, 'best dressed', False)
+	matches = filter_tweets(tweets, 'best dressed', False)
 	# matches = filter_tweets(tweets, 'host', False)
 
 	# remove tweets with 'worst' --> just makes it easier
-	matches = filter_tweets_remove_temp(tweets, 'worst dressed', False)
+	matches = filter_tweets_remove_temp(matches, 'worst dressed', False)
 
+	# randomize tweets
+	matches = randomize_list(matches, 50)
+
+	# return dictionary
+	return counter_helper(matches)
+
+
+def worst_dressed(tweets):
+	
+	# get matches w best dressed in tweet
+	matches = filter_tweets(tweets, 'worst dressed', False)
+	# matches = filter_tweets(tweets, 'host', False)
+
+	# remove tweets with 'worst' --> just makes it easier
+	matches = filter_tweets_remove_temp(matches, 'best dressed', False)
+
+	# randomize tweets
+	matches = randomize_list(matches, 50)
+
+	# return dictionary
+	return counter_helper(matches)
+
+
+def randomize_list(lst, num):
+	temp = lst
+	if len(temp) > num: # randomize
+		newList = []
+		while len(newList) < num:
+			rando = randint(0, len(temp)-1)
+			newList.append(temp[rando])
+			del temp[rando]
+		temp = newList
+	return temp
+
+
+def counter_helper(tweets):
+
+	matches = tweets
 	names = []
+	known_names = []
 
 	for match in matches:
-		listOfNames = find_all_names(match)
-		names = names + listOfNames
-	
-	namesDict = Counter(names)
-	print(namesDict)
+		print(match)
+		listOfNames = find_all_names(match, known_names, True)
+
+		doNotAdd = False
+
+		for name in listOfNames:
+			if name not in known_names:
+				known_names.append(name)
+
+			startIndex = match.find(name)
+			endIndex = startIndex + len(name)
+
+			if name[startIndex - 1:startIndex] == '(' and name[endIndex + 1:endIndex+2] == ')':
+				doNotAdd = True
+			elif name[startIndex - 3:startIndex - 1] == 'in':
+				doNotAdd = True
+
+			if not doNotAdd:
+				names.append(name)
+
+	myDict = dict(Counter(names))
+	return myDict
+
+def print_results(myDict):
+
+	namesDict = myDict
 	first = max(namesDict, key=namesDict.get)
 	del namesDict[first]
 	second = max(namesDict, key=namesDict.get)
@@ -37,9 +132,5 @@ def find_best_dressed(tweets):
 	del namesDict[fifth]
 	print(first + ", " + second + ", " + third + ", " + fourth + ", " + fifth)
 
-	return max(namesDict, key=namesDict.get)
-
-
-if __name__ == "__main__":
-	text = ["@MarioLopezExtra you're snubbing Kate Hudson!!! Best dressed in my book!! #goldenglobes #bestdressed", "@Kiki1788  RT @PerezHilton Julianna Margulies, another one of my BEST dressed!!! #GoldenGlobes http://t.co/Fdp7DQTy", "Some of the Best Dressed at #GoldenGlobes have to be Eva @EvaLongoria , Sofia @SofiaVergara , and Katherine @katharinemcphee #Beautiful :-)", "Best Dressed #4 : Jennifer Lawrence in Christian Dior Haute Couture #GoldenGlobes http://t.co/3jhX5J3X", "@iloveFireangel Amy Adams and Anne Hathaway are my best dressed for #goldenglobes", "Best Dressed #7 : Marion Cotillard in Christian Dior #GoldenGlobes http://t.co/72iDDs0O", "@MissKellyO Another best dressed: Jennifer Garner. Stunning! #goldenglobes #fashionpolice", "My top 4 best dressed of the Golden Globes. #ChristianDior #MiuMiu #Chanel #AlexanderMcqueen http://t.co/LvKYF2eG", "Jennifer Garner definitely makes best dressed list #goldenglobes", "RT @glamour_fashion: Ladies and gents, we have our #GoldenGlobes best dressed! Vote for your pick here: http://t.co/SCLb2qTB", "My vote for best dressed at the Golden Globes...Jennifer Garner. #flawless", "Golden Globes 2013: The 10 Best Dressed http://t.co/rueSAVjv", "RT @PerezHilton: Julianna Margulies, another one of my BEST dressed!!! #GoldenGlobes http://t.co/n9yp3ivP", "#goldenglobes : Best Dressed= Jennifer Lopez ... Worst Dressed = Halle Berry", "RT @bryanboy: Am I the only one having a difficult time picking who the best dressed woman was at the golden globes because there arent a lot of choices?", "RT @bryanboy: Am I the only one having a difficult time picking who the best dressed woman was at the golden globes because there arent a lot of choices?", "RT @bryanboy: Am I the only one having a difficult time picking who the best dressed woman was at the golden globes because there arent a lot of choices?", "RT @bryanboy: Am I the only one having a difficult time picking who the best dressed woman was at the golden globes because there arent a lot of choices?", "RT @BAZAARAustralia: #GoldenGlobes Best Dressed: Australian actress Nicole Kidman was stunning in an Alexander McQueen gown: http://t.co/8G9iTQVI @WorldMcQueen", "RT @bryanboy: Am I the only one having a difficult time picking who the best dressed woman was at the golden globes because there arent a lot of choices?", "Best dressed couple: Rachel Weisz and Daniel Craig. Holy hotness #GoldenGlobes", "Love Kate Hudson's dress! Best dressed for me!  #GoldenGlobes  http://t.co/3vXKtU0w”", "Basically Tina &amp; Amy killed it, @JLo  was Best Dressed, loved that @lenadunham /Girls won, &amp; happy Jodie officially came out. #GoldenGlobes", "RT @BAZAARAustralia: #GoldenGlobes Best Dressed: Australian actress Nicole Kidman was stunning in an Alexander McQueen gown: http://t.co/8G9iTQVI @WorldMcQueen", "Claire Danes, Anne Hathaway, Jennifer Lawrence, and all the best dressed at the 2013 #GoldenGlobes http://t.co/w4YoGHaC", "RT @BAZAARAustralia: #GoldenGlobes Best Dressed: Australian actress Nicole Kidman was stunning in an Alexander McQueen gown: http://t.co/8G9iTQVI @WorldMcQueen", "Naomi watts RT @LaBellaMAFlA: Who do you think is the Best dressed for #goldenglobes ? We want to hear from you!", "Are you watching the Golden Globes? Who is the best dressed of the night?", "Vote for Best Dressed #GoldenGlobes http://t.co/u6Hep8jI", "RT @forbes: Claire Danes, Anne Hathaway, Jennifer Lawrence, and all the best dressed at the 2013 #GoldenGlobes http://t.co/FpYS9Tlg", "Who do you think is the best dressed at tonight's #GoldenGlobes?", "“@GiulianaRancic: What were ur fave and least fave red carpet looks? #GoldenGlobes”", "JESSICA ALBA FOR BEST DRESSED LADY!", "RT @wisnude: Best Dressed #6 : Jessica Alba in Oscar de La Renta #GoldenGLobes http://t.co/Cc7kgqte", "RT @Forbes: Claire Danes, Anne Hathaway, Jennifer Lawrence, and all the best dressed at the 2013 #GoldenGlobes http://t.co/w4YoGHaC", "RT @AnitaPatrickson: @juliannehough Congrats on making @ELLEmagazine 's Best Dressed List!!! #GoldenGlobes", "RT @BAZAARAustralia: #GoldenGlobes best dressed: Zooey Deschanel was a lady in red in an Oscar de la Renta gown http://t.co/9TdV0BEj @OscarPRGirl @ZooeyDeschanel", "@JLo @EvaLongoria @msleamichele &amp; Salma Hayek top our best dressed list #GoldenGlobes http://t.co/7HIrKFrW", "RT @Forbes: Claire Danes, Anne Hathaway, Jennifer Lawrence, and all the best dressed at the 2013 #GoldenGlobes http://t.co/w4YoGHaC", "Thank you to the Hollywood Foreign Press. Check http://t.co/tfALBMNS tomorrow for party pics, best dressed and more. #GoldenGlobes", "My pick for best dressed was Kate Hudson! Who was yours? #GoldenGlobes", "Worst Dressed...Halle Berry Best Dressed: Michelle Dockery, Jennifer Lawrence,Emily Blunt &amp; the timeless Sally Fields. #goldenglobes", "@MoodyVintage best dressed thoughts? @goldenglobes", "victor garber's purple bow tie won best dressed in my opinion tonight. #goldenglobes", "RT @Forbes: Claire Danes, Anne Hathaway, Jennifer Lawrence, and all the best dressed at the 2013 #GoldenGlobes http://t.co/w4YoGHaC", "RT @marie_claire_au: If you missed the #GoldenGlobes, here are all the dresses from the red carpet! Plus, stay tuned for Best Dressed: http://t.co/K9YO85S6", "5 Best Dressed Golden Globes http://t.co/SGQ2h1oL #goldenglobes #tinafey #amypoehler #halleberry #clairedanes #jenniferlawrence #taylorswift", "What a solid show! What are your thoughts? Who was best dressed? The winners? The hosts? I want to hear what you think! #GoldenGlobes", "Michelle Dockery of Downton Abbey: my vote for best dressed at the #goldenglobes. What do YOU think? http://t.co/hkOnutqi", "#goldenglobes best dressed: kate hudson in alexander mcqueen and worst dressed: halle berry in a candy wrapper from forever 21 #goldenglobes", "RT @RobertVerdi: #goldenglobes best dressed: kate hudson in alexander mcqueen and worst dressed: halle berry in a candy wrapper from forever 21 #goldenglobes", "RT @IamW0man: Best dressed is JLo, now if only she could lend me her dress! #goldenglobes", "RT @clarisa0920: Racy &amp; Lacy @Jlo breath taking tonight my girl won best dressed hands down!!!", "#GoldenGlobes http://t.co/ie0CKAT3", "RT @RobertVerdi: #goldenglobes best dressed: kate hudson in alexander mcqueen and worst dressed: halle berry in a candy wrapper from forever 21 #goldenglobes", "RT @RobertVerdi: #goldenglobes best dressed: kate hudson in alexander mcqueen and worst dressed: halle berry in a candy wrapper from forever 21 #goldenglobes", "RT @RobertVerdi: #goldenglobes best dressed: kate hudson in alexander mcqueen and worst dressed: halle berry in a candy wrapper from forever 21 #goldenglobes", "RT @RobertVerdi: #goldenglobes best dressed: kate hudson in alexander mcqueen and worst dressed: halle berry in a candy wrapper from forever 21 #goldenglobes", "RT @RobertVerdi: #goldenglobes best dressed: kate hudson in alexander mcqueen and worst dressed: halle berry in a candy wrapper from forever 21 #goldenglobes", "I missed the golden globes ugh ...", "Guess ill be watching E fashion worst &amp; best dressed", "RT @RobertVerdi: #goldenglobes best dressed: kate hudson in alexander mcqueen and worst dressed: halle berry in a candy wrapper from forever 21 #goldenglobes", "RT @RobertVerdi: #goldenglobes best dressed: kate hudson in alexander mcqueen and worst dressed: halle berry in a candy wrapper from forever 21 #goldenglobes", "best dressed of the night at the #GoldenGlobes goes to http://t.co/BLCJ83Z4", "RT @RobertVerdi: #goldenglobes best dressed: kate hudson in alexander mcqueen and worst dressed: halle berry in a candy wrapper from forever 21 #goldenglobes", "RT @RobertVerdi: #goldenglobes best dressed: kate hudson in alexander mcqueen and worst dressed: halle berry in a candy wrapper from forever 21 #goldenglobes", "RT @RobertVerdi: #goldenglobes best dressed: kate hudson in alexander mcqueen and worst dressed: halle berry in a candy wrapper from forever 21 #goldenglobes", "Mai Top 9 @goldenglobes Best Dressed for @TheTodayshow style segment tmrw with @giulianarancic. Who would u add? #OKGG http://t.co/SKmr02Gg"]
-	find_best_dressed(text)
+	result = [first, second, third, fourth, fifth]
+	return result
