@@ -26,6 +26,8 @@ def lemmatize_tweet(tweet):
 
 	for token in tweet:
 		lemmatized.append(lem.lemmatize(token,"v"))
+		if lem.lemmatize(token,"v") == 'support':
+			print("token: %s, lemmatized: %s" % (token, lem.lemmatize(token,"v")))
 	return lemmatized
 
 #usually, award is either at the end of the tweet, or is followed by "is", or sometimes followed by "award/awarded to", or "goes to"
@@ -37,19 +39,19 @@ def find_award(text, known_names):
 	text = clean_tweet(text).lower()
 	text = tt.tokenize(text)
 	#print(text)
-	lemmatized = lemmatize_tweet(text)
+	#lemmatized = lemmatize_tweet(text)
 	awardName = []
 	try:
-		bestIndex = lemmatized.index("best")
+		bestIndex = text.index("best")
 	except:
 		return None
 	else:
 		common_following_words = ['award', 'win', 'go', 'buy'] #some common words following the award name, not covered by stop words "best buy"
-		stop_words = list(stopwords.words("english")) + list(string.punctuation) + common_following_words + known_names
-		for i in range(bestIndex, len(lemmatized)):
-			test = ps.stem(lemmatized[i]) #stem individual test words, stemming entire text fucks literally everything up
+		stop_words = list(stopwords.words("english")) + ["...", ":"] + common_following_words + known_names
+		for i in range(bestIndex, len(text)):
+			test = ps.stem(text[i]) #stem individual test words, stemming entire text fucks literally everything up
 			if test not in stop_words and test not in common_following_words:
-				awardName.append(lemmatized[i])
+				awardName.append(text[i])
 				continue
 			break
 	if len(awardName) == 1 or awardName[1].lower() == 'personality' or 'dress' in awardName[1].lower():
