@@ -23,6 +23,26 @@ def filter_tweets(tweets, param, caseSensitive=True):
 
     return matches
 
+
+###
+# @param: list of strings
+# @return: list of strings of just tweet text 
+###
+def filter_tweets_remove(tweets, param, caseSensitive=True):
+    #if tweet's text contains the regex expression, add the text of the tweet to the match list
+    matches =[]
+    for tweet in tweets:
+        text = tweet['text']
+        if(caseSensitive):
+            found =  re.search(param, text)
+        else:
+            found = re.search(param, text, flags=re.IGNORECASE)
+
+        if(not found):
+                 matches.append(tweet["text"])
+
+    return matches
+
 ###
 # @param: list of strings, date
 # @return: list of strings (maybe just text)
@@ -47,6 +67,21 @@ def filter_tweets_temp(tweets, param, caseSensitive=True):
             found = re.search(param, tweet, flags=re.IGNORECASE)
 
         if(found):
+                 matches.append(tweet)
+    return matches
+
+
+# Temporary to test best_dressed
+def filter_tweets_remove_temp(tweets, param, caseSensitive=True):
+    #if tweet's text contains the regex expression, add the text of the tweet to the match list
+    matches =[]
+    for tweet in tweets:
+        if(caseSensitive):
+            found =  re.search(param, tweet)
+        else:
+            found = re.search(param, tweet, flags=re.IGNORECASE)
+
+        if(not found):
                  matches.append(tweet)
     return matches
 
