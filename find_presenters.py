@@ -81,7 +81,7 @@ def find_presenters(tweet_list, awardsList):
 
 	return presenters
 
-def associate_presenters_awards(tweet_list, awards_list):
+def find_all_presenters(tweet_list, awards_list):
 	possible_presenters = find_presenters(tweet_list, awards_list)
 	final_presenters = {} #final result
 	#print(possible_presenters.keys())
@@ -116,7 +116,7 @@ def associate_presenters_awards(tweet_list, awards_list):
 
 if __name__ == "__main__":
 	tweets = load_data()
-	associate_presenters_awards(tweets[:100000])
+	find_all_presenters(tweets[:100000])
 
 
 

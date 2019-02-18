@@ -16,20 +16,34 @@ from loaddatscategories_d import load_data
 from findwinners_d import findwinner
 from findawardcategories_d import mains
 from find_categories import categoriess
-def main():
-	awards=categoriess()
-	winners=mains()
+from load_data import load_data
+from find_presenters import find_all_presenters
+
+
+def main(year):
+	tweets = load_data(year)
+
+
+	awards=categoriess() #list of awards
+	winners=mains() #dictionary, of awards keys with associated winners as values
 	
-	dicts={}
-	final={"Host":[]} #function for host
-	awardname={}
-	for i in awards:
-		awardname[i]={"Presenters":[],
-					  "Nominees":[],
-					  "Winner": winners[i]}
+	presenters = find_all_presenters(tweets, awards) #returns dictionary, of awards keys with associated presenters as values
+
+	results = {}
 	
 
-	print(awardname)
+
+
+	# dicts={}
+	# final={"Host":[]} #function for host
+	# awardname={}
+	# for i in awards:
+	# 	awardname[i]={"Presenters":[],
+	# 				  "Nominees":[],
+	# 				  "Winner": winners[i]}
+	
+
+	# print(awardname)
 	
 
 
