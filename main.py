@@ -73,11 +73,36 @@ def main(year):
 
 		results[award] = award_dict
 	
-	print(results)
+	# print(results)
+	print (get_human_readable_format(results, awards, dressed))
 	return results
 
+def get_human_readable_format(results_dict, award_dict, dressed_dict):
+	category_types = ["presenters", "winners"]
+	extra_categories = ["best", "worst"]
 
+	string_formatted = text_formatter_helper("hosts", results_dict['hosts']) + "\n"
 
+	for award in award_dict:
+		string_formatted += text_formatter_helper("award", award)
+
+		for category in category_types:
+			string_formatted += text_formatter_helper(category, results_dict[award][category])
+		string_formatted += "\n"
+	for category in extra_categories:
+		string_formatted += text_formatter_helper(category + " Dressed", dressed_dict[category])
+
+	return string_formatted
+
+def text_formatter_helper(cat_type, data):
+	out_string = cat_type.capitalize() + ": "
+	if isinstance(data, str):
+		out_string += data + "\n"
+	elif isinstance(data, list):
+		for elem in data:
+			out_string += elem + ", "
+		out_string = out_string[:-2] + "\n" # remove comma space from last element
+	return out_string
 
 def best_worst_to_string(lst):
 	count = 0
