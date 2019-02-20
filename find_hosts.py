@@ -22,13 +22,13 @@ def find_host(tweets):
 			newList.append(matches[randint(0, len(matches))])
 		matches = newList
 
-	print(len(matches))
+	# print(len(matches))
 	tallyDict = {} # {'ben affleck': 1, 'john jones': 2, etc.}
 	hostList = [] # ['ben affleck', 'john jones'] --> used to identify keys for dictionary
 
 	# find names
 	for match in matches:
-		print (match)
+		# print (match)
 		listOfNames = find_all_names(match, known_names)
 
 		for name in listOfNames:
@@ -86,8 +86,8 @@ def find_host(tweets):
 			return None
 
 	val = max(tallyDict, key=tallyDict.get)
-	print(tallyDict)
-	print(val)
+	# print(tallyDict)
+	# print(val)
 	return val
 
 

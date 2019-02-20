@@ -108,7 +108,7 @@ def main(param):
 		else:
 			dicts[combines]=1
 
-	print (sorted( ((v,k) for k,v in dicts.items()), reverse=True))
+	# print (sorted( ((v,k) for k,v in dicts.items()), reverse=True))
 		# for l in k[index:]:
 		# 	while l[0] not in list(string.punctuation):
 		# 		category.append(l)

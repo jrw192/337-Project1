@@ -32,7 +32,7 @@ def filter_tweets_text(tweets, param, caseSensitive=True):
             found = re.search(param, text, flags=re.IGNORECASE)
 
         if(found):
-                 matches.append(text)
+            matches.append(text)
 
     return matches
 
@@ -83,32 +83,12 @@ def filter_tweets_by_time(tweets, time):
     return matches
 
 
-## Takes too long to filter all tweets out
-# def filter_tweets_by_language(tweets):
-#     DetectorFactory.seed = 0 #enforce consistent results
-#     # matches = []
-#     # for tweet in tweets:
-#     #     if(detect(tweet['text']) == 'en'):
-#     #         matches.append(tweet["text"])
-
-#     # return matches
-
-#     count = {}
-#     for tweet in tweets:
-#         try:
-#             tweet = detect(tweet['text'])
-#         except:
-#             continue
-
-#     return Counter(count)
-
-
 def main():
     tweets = load_data()
     nameMatches = filter_tweets(tweets, 'mychael danna', False);
     #titleMatches = filter_tweets(nameMatches, 'presenter')
     #print(titleMatches)
-    print(nameMatches)
+    # print(nameMatches)
     return nameMatches
 
 

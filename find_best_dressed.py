@@ -12,8 +12,8 @@ def find_best_worst_dressed(tweets):
 	best_dict = best_dressed(tweets)
 	worst_dict = worst_dressed(tweets)
 
-	print(best_dict)
-	print(worst_dict)
+	# print(best_dict)
+	# print(worst_dict)
 
 	# print_results(best_dict)
 	# print_results(worst_dict)
@@ -36,8 +36,8 @@ def find_best_worst_dressed(tweets):
 				worst.append(x)
 			del worst_dict[x]
 
-	print(best)
-	print(worst)
+	# print(best)
+	# print(worst)
 
 	# returns a tuple (can be changed)
 	return best, worst
@@ -94,7 +94,7 @@ def counter_helper(tweets):
 	known_names = []
 
 	for match in matches:
-		print(match)
+		# print(match)
 		listOfNames = find_all_names(match, known_names, True)
 
 		doNotAdd = False
@@ -130,7 +130,7 @@ def print_results(myDict):
 	del namesDict[fourth]
 	fifth = max(namesDict, key=namesDict.get)
 	del namesDict[fifth]
-	print(first + ", " + second + ", " + third + ", " + fourth + ", " + fifth)
+	# print(first + ", " + second + ", " + third + ", " + fourth + ", " + fifth)
 
 	result = [first, second, third, fourth, fifth]
 	return result

@@ -10,15 +10,15 @@ import string
 import re
 
 def clean_tweet(tweet):
-	print("cleaning tweet....")
+	# print("cleaning tweet....")
 	cleaned = re.sub(r'#[a-z 0-9]+', '',tweet) #remove all hashtags 
 	cleaned = re.sub(r'[^\w\s]','',cleaned) #remove all punctuation characters
 
 	
-	print(cleaned)
+	# print(cleaned)
 
 def tokenize(matches):
-	print("tokenizing....")
+	# print("tokenizing....")
 	tt = TweetTokenizer() #use the tweet tokenizer for better results
 	tokenized = []
 	for match in matches:
@@ -26,7 +26,7 @@ def tokenize(matches):
 	return tokenized
 
 def remove_stopwords(tokenized_matches):
-	print("removing stopwords....")
+	# print("removing stopwords....")
 	stop_words = list(stopwords.words("english")) + list(string.punctuation)
 	sans_stopwords = [] #we could also remove from tokenized_matches
 	for token in tokenized_matches:
@@ -43,10 +43,10 @@ def main():
 	matches = filter_tweets(tweets, 'Amy Adams', False)
 	tokenized_matches = remove_stopwords(tokenize(matches))
 	string_matches = remove_stopwords(matches)
-	print("there are %s tokenized matches...." % len(tokenized_matches))
+	# print("there are %s tokenized matches...." % len(tokenized_matches))
 	
 	names = find_all_names(string_matches)
-	print(names)
+	# print(names)
 
 
 

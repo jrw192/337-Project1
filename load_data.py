@@ -6,7 +6,7 @@ def load_data(year):
 	tweets = []
 	filename = ""
 	files = os.listdir('data')
-	print(files)
+	# print(files)
 	for file in files:
 		if year in file:
 			filename = 'data/' + file

@@ -14,12 +14,13 @@ ia = IMDb()
 ps = PorterStemmer()
 stop_words = list(stopwords.words("english")) + list(string.punctuation)
 
-def imdb_film_search(query):
+def imdb_film_search(query, year):
 	# print("cross referencing %s with imdb...." % query)
 
 	matches = ia.search_movie(query)
 	if len(matches) > 0 :
-		if matches[0]['title'].lower() == query.lower():
+		movie_year = int(matches[0]['year'])
+		if matches[0]['title'].lower() == query.lower() and (movie_year <= int(year) and movie_year >= int(year)-2):
 			#print("FOUND: ", matches[0]['title'])
 			return matches[0]['title']
 	return None
@@ -45,7 +46,7 @@ def find_entities(text):
 	return entities
 
 ##try n-grams of words
-def find_names(text, entities):
+def find_names(text, entities, year):
 	#print("finding names from entity list....")
 	# common_award_words = ['director', 'best', 'picture', 'film', 'movie', 'television']
 	names = []
@@ -63,27 +64,27 @@ def find_names(text, entities):
 				test = ps.stem(newTokens[i])
 				if test not in stop_words: #movie titles don't end in a stopword
 					#print("searching film title: " , title)
-					if imdb_film_search(" ".join(title)):
+					if imdb_film_search(" ".join(title), year):
 						names.append(" ".join(title))
 	# print(names)
 	return names
 
 		
 	
-def find_all_names(text): #takes in the raw text of a tweet, returns a list of films identified from the tweet.
+def find_all_names(text, year): #takes in the raw text of a tweet, returns a list of films identified from the tweet.
 	entities = find_entities(text)
 	#names = find_names(entities)
-	names = find_names(text, entities)
+	names = find_names(text, entities, year)
 	return names
 
 
-if __name__ == "__main__":
-	argoTweets = ['#Congratulations to @BenAffleck for winning the best Director award for Argo at the golden globes!! FANTASTIC MOVIE http://t.co/TZ47heFF',
-			'RT @CNNshowbiz: Best director motion picture #GoldenGlobe awarded to Ben Affleck for "Argo" #GoldenGlobes',
-			'@BenAffleck Congratulations‼! Best Director for #Argo! #GoldenGlobes',
-			'RT @RajeevMasand: GoldenGlobes: Best Film Drama - Argo!  That is the right choice, baby!',
-			'Golden Globes Best Picture (drama) won by Argo, Best Musical/ Comedy taken by Les Miserables with Hugh Jackman as best Actor for his role.']
-	find_all_names(argoTweets[0])
+# if __name__ == "__main__":
+# 	argoTweets = ['#Congratulations to @BenAffleck for winning the best Director award for Argo at the golden globes!! FANTASTIC MOVIE http://t.co/TZ47heFF',
+# 			'RT @CNNshowbiz: Best director motion picture #GoldenGlobe awarded to Ben Affleck for "Argo" #GoldenGlobes',
+# 			'@BenAffleck Congratulations‼! Best Director for #Argo! #GoldenGlobes',
+# 			'RT @RajeevMasand: GoldenGlobes: Best Film Drama - Argo!  That is the right choice, baby!',
+# 			'Golden Globes Best Picture (drama) won by Argo, Best Musical/ Comedy taken by Les Miserables with Hugh Jackman as best Actor for his role.']
+# 	find_all_names(argoTweets[0])
 
 
 

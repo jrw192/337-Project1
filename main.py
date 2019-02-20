@@ -25,7 +25,6 @@ from find_nominees import find_all_nominees
 from find_best_dressed import find_best_worst_dressed
 
 
-
 def main(year):
 	tweets = load_data(year)
 
@@ -37,14 +36,11 @@ def main(year):
 	print('GETTING PRESENTERS')
 	presenters = find_all_presenters(tweets, awards) #returns dictionary, of awards keys with associated presenters as values
 
-
-	# time = find_start_time(tweets, "golden globes")
-	# rel_tweets = filter_tweets_by_time(tweets, time)
-	# nominees = find_all_nominees(rel_tweets, awards)
 	print('GETTING HOSTS')
 	hosts = find_host(tweets)
 
-
+	print('GETTING NOMINEES')
+	nominees = find_all_nominees(tweets, awards)
 
 	#find best and worst dressed
 	print('GETTING BEST/WORST DRESSED')
@@ -63,12 +59,12 @@ def main(year):
 	for award in awards:
 		award_winner = winners[award]
 		award_presenter = presenters[award]
-		# award_nominees = nominees[award]
+		award_nominees = nominees[award]
 
 		award_dict = {}
 		award_dict['winners'] = award_winner
 		award_dict['presenters'] = award_presenter
-		# award_dict['nominees'] = award_nominees
+		award_dict['nominees'] = award_nominees
 
 
 		results[award] = award_dict
@@ -78,7 +74,7 @@ def main(year):
 	return results
 
 def get_human_readable_format(results_dict, award_dict, dressed_dict):
-	category_types = ["presenters", "winners"]
+	category_types = ["presenters", "nominees", "winners"]
 	extra_categories = ["best", "worst"]
 
 	string_formatted = text_formatter_helper("hosts", results_dict['hosts']) + "\n"

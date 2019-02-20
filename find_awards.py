@@ -26,8 +26,8 @@ def lemmatize_tweet(tweet):
 
 	for token in tweet:
 		lemmatized.append(lem.lemmatize(token,"v"))
-		if lem.lemmatize(token,"v") == 'support':
-			print("token: %s, lemmatized: %s" % (token, lem.lemmatize(token,"v")))
+		# if lem.lemmatize(token,"v") == 'support':
+			# print("token: %s, lemmatized: %s" % (token, lem.lemmatize(token,"v")))
 	return lemmatized
 
 #usually, award is either at the end of the tweet, or is followed by "is", or sometimes followed by "award/awarded to", or "goes to"
@@ -58,7 +58,7 @@ def find_award(text, known_names):
 		return None
 
 	awardName = " ".join(awardName)
-	print(awardName)
+	# print(awardName)
 	return awardName
 
 

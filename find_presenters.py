@@ -31,8 +31,8 @@ def find_award_presenters(tweet_list, award):
 			tweets = filtered
 
 	#tweets = filter_tweets_text(tweet_list, award_stripped, caseSensitive=False) + filter_tweets_text(tweet_list, award, caseSensitive=False) + filter_tweets_text(tweet_list, award_no_punct, caseSensitive=False)
-	print(award_tokenized)
-	print(len(tweets))
+	# print(award_tokenized)
+	# print(len(tweets))
 	nameFreqs = {}
 	known_names = []
 	known_awards = []
@@ -100,7 +100,7 @@ def find_all_presenters(tweet_list, awards_list):
 		for person in people: #find the second person
 			if person != first[0] and people[person] > second[1]:
 				second = [person, people[person]]
-		print("presenters for %s: %s and %s" % (award, first[0], second[0]))
+		# print("presenters for %s: %s and %s" % (award, first[0], second[0]))
 
 		presenters = [first[0], second[0]]
 		if second[0] == "":
@@ -108,7 +108,7 @@ def find_all_presenters(tweet_list, awards_list):
 		final_presenters[award] = presenters
 
 
-	print(final_presenters)
+	# print(final_presenters)
 	return final_presenters
 
 

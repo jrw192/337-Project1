@@ -102,28 +102,28 @@ def find_names(entity_list, known_names):
 def find_all_names(text, known_names=[], removeTweetHandles = False): #takes in the raw text of a tweet and list of known names, returns a list of actor/actress names identified from the tweet.
 	entities = find_entities(text, removeTweetHandles)
 	names = find_names(entities, known_names)
-	print(names)
+	# print(names)
 	return names
 
 
-if __name__ == "__main__":
-	#find_entities(['My', 'best', 'dressed', 'go', 'to', '..', '•', 'Eva', 'Longoria', '•', 'Amy', 'Adams', '•', 'Naomi', 'Watts', '•', 'Amanda', 'Seyfried', '#GoldenGlobes'])
-	text = "My best dressed go to .. • Eva Longoria • Amy Adams • Naomi Watts • Amanda Seyfried  #GoldenGlobes"
-	text1 = "Daniel Day-Lewis wins Best Performance Motion Picture."
-	text2 = "i love emily blunt."
-	text3 = "I Love Emily Blunt."
-	text4 = "#Congratulations to @BenAffleck for winning the best Director award for Argo at the golden globes!! FANTASTIC MOVIE http://t.co/TZ47heFF"
-	text5 = "Finally, the category we've all been waiting for. Best original score, motion picture: Mychael Danna, Life of Pi. #GoldenGlobes"
-	text6 = "Tina and Amy hosting golden globes ahhhhh let the humor begin"
+# if __name__ == "__main__":
+# 	#find_entities(['My', 'best', 'dressed', 'go', 'to', '..', '•', 'Eva', 'Longoria', '•', 'Amy', 'Adams', '•', 'Naomi', 'Watts', '•', 'Amanda', 'Seyfried', '#GoldenGlobes'])
+# 	text = "My best dressed go to .. • Eva Longoria • Amy Adams • Naomi Watts • Amanda Seyfried  #GoldenGlobes"
+# 	text1 = "Daniel Day-Lewis wins Best Performance Motion Picture."
+# 	text2 = "i love emily blunt."
+# 	text3 = "I Love Emily Blunt."
+# 	text4 = "#Congratulations to @BenAffleck for winning the best Director award for Argo at the golden globes!! FANTASTIC MOVIE http://t.co/TZ47heFF"
+# 	text5 = "Finally, the category we've all been waiting for. Best original score, motion picture: Mychael Danna, Life of Pi. #GoldenGlobes"
+# 	text6 = "Tina and Amy hosting golden globes ahhhhh let the humor begin"
 
-	#'#Congratulations to @BenAffleck for winning the best Director award for Argo at the golden globes!! FANTASTIC MOVIE http://t.co/TZ47heFF',
-	#		'RT @CNNshowbiz: Best director motion picture #GoldenGlobe awarded to Ben Affleck for "Argo" #GoldenGlobes',
-	#		'@BenAffleck Congratulations‼! Best Director for #Argo! #GoldenGlobes',
-	#		'RT @RajeevMasand: GoldenGlobes: Best Film Drama - Argo!  That is the right choice, baby!',
-	#		'Golden Globes Best Picture (drama) won by Argo, Best Musical/ Comedy taken by Les Miserables with Hugh Jackman as best Actor for his role.'
+# 	#'#Congratulations to @BenAffleck for winning the best Director award for Argo at the golden globes!! FANTASTIC MOVIE http://t.co/TZ47heFF',
+# 	#		'RT @CNNshowbiz: Best director motion picture #GoldenGlobe awarded to Ben Affleck for "Argo" #GoldenGlobes',
+# 	#		'@BenAffleck Congratulations‼! Best Director for #Argo! #GoldenGlobes',
+# 	#		'RT @RajeevMasand: GoldenGlobes: Best Film Drama - Argo!  That is the right choice, baby!',
+# 	#		'Golden Globes Best Picture (drama) won by Argo, Best Musical/ Comedy taken by Les Miserables with Hugh Jackman as best Actor for his role.'
 
-	#find_all_names(text4)
-	imdb_name_search('Daniel DayLewis')
+# 	#find_all_names(text4)
+# 	imdb_name_search('Daniel DayLewis')
 
 
 
