@@ -70,7 +70,7 @@ def get_presenters(year):
 	name of this function or what it returns.'''
 	# Your code here
 	tweets = load_data(year)
-	presenters = find_all_presenters(tweets, awards, winners)
+	presenters = find_all_presenters(tweets, awards)
 	return presenters
 
 def pre_ceremony():
@@ -90,79 +90,57 @@ def main():
 	run when grading. Do NOT change the name of this function or
 	what it returns.'''
 
-	year = input("Enter the year, then press enter:\n")
+	year = input("Enter the year:\n")
 	print("processing data.......give us a few minutes........")
 	tweets = load_data(year)
+	# task = input("Enter task: 'hosts', 'awards', 'winners', 'presenters', 'nominees', or 'dressed'.\n")
+	# if task == "hosts":
 	hosts = get_hosts(year)
-	print("host finding completed.")
-
+	print(hosts)
+	# elif task == "awards":
 	awards = get_awards(year)
-	print("award finding completed.")
-
-	winners = get_winner(year)
+	for award in awards:
+		print(award)
+	# elif task == "winners"
+	winners = get_winner(year)	
+	# elif task == "presenters":
 	all_winners = []
 	for key in list(winners.keys()):
 		print(key)
 		print(winners[key])
 		all_winners.append(winners[key])
-	print("winner finding completed.")
-
-	presenters = find_all_presenters(tweets, awards, all_winners)
-	print("presenter finding completed.")
-
+	print('ALL WINNERS: ', all_winners)
+	presenters = find_all_presenters(tweets, awards)
+	# elif task == "nominees":
 	nominees = get_nominees(year)
-	print("nominee finding completed.")
-
+	# elif task == "dressed":
 	dressed = find_best_worst_dressed(tweets)
-	print("best dressed finding completed.")
-	print("\n")
-
 
 	running= True
-	while running:
-		task = input("Enter task: 'hosts', 'awards', 'winners', 'presenters', 'nominees', or 'dressed', then press enter.\n")
-		if task == 'hosts':
-			print("host(s): %s" % hosts)
-			print("\n")
+	task = input("Enter task: 'hosts', 'awards', 'winners', 'presenters', 'nominees', or 'dressed'. Type 'end' to end.\n")
 
+	while running:
+		if task == 'hosts':
+			print(host)
 		elif task == 'awards':
-			print("the awards are: ")
 			for award in awards:
 				print(award)
-			print("\n")
-
 		elif task == 'winners':
-			for award in winners:
-				print("winner for %s : %s" % (award, winners[award]))
-			print("\n")
-
+			for winner in winners:
+				print(winner)
 		elif task == 'presenters':
-			for award in presenters:
-				print("presenters for %s are: " % award)
-				for person in presenters[award]:
-					if person == " ":
-						print("Not Found")
-					print(person)
-				print("\n")
-			print("\n")
-
+			for presenter in presenters:
+				print(presenter)
 		elif task == 'nominees':
-			for award in nominees:
-				print("presenters for %s are: " % award)
-				for person in nominees[award]:
-					print(person)
-
-
+			for nominee in nominees:
+				print(nominee)
 		elif task == 'dressed':
-			print("best dressed : ")
-			for person in dressed[0]:
-				print(person)
-			print("\n")
-			print("worst dressed : ")
-			for person in dressed[1]:
-				print(person)
+			for dress in dressed:
+				print(dress)
+		elif task == 'end':
+			running = False
+			return
 
-			print("\n")
 	return
 
 # helper functions
