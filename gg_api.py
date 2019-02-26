@@ -70,7 +70,7 @@ def get_presenters(year):
 	name of this function or what it returns.'''
 	# Your code here
 	tweets = load_data(year)
-	presenters = find_all_presenters(tweets, awards, all_winners)
+	presenters = find_all_presenters(tweets, awards, winners)
 	return presenters
 
 def pre_ceremony():
@@ -90,20 +90,56 @@ def main():
 	run when grading. Do NOT change the name of this function or
 	what it returns.'''
 
-	year = input("Enter the year.")
+	year = input("Enter the year:\n")
+	print("processing data.......give us a few minutes........")
 	tweets = load_data(year)
-	task = input("Enter task: 'hosts', 'awards', 'presenters', 'nominees', or 'dressed'.")
-	if task == "hosts":
-		hosts = get_hosts(year)
-		print(host)
-	elif task == "awards":
-		awards = get_awards(year)
-	elif task == "presenters":
-		presenters = get_presenters(year)
-	elif task == "nominees":
-		nominees = get_nominees(year)
-	elif task == "dressed":
-		dressed = find_best_worst_dressed(tweets)
+	# task = input("Enter task: 'hosts', 'awards', 'winners', 'presenters', 'nominees', or 'dressed'.\n")
+	# if task == "hosts":
+	hosts = get_hosts(year)
+	print(host)
+	# elif task == "awards":
+	awards = get_awards(year)
+	for award in awards:
+		print(award)
+	# elif task == "winners"
+	winners = get_winner(year)	
+	# elif task == "presenters":
+	all_winners = []
+	for key in list(winners.keys()):
+		print(key)
+		print(winners[key])
+		all_winners.append(winners[key])
+	print('ALL WINNERS: ', all_winners)
+	presenters = find_all_presenters(tweets, awards, all_winners)
+	# elif task == "nominees":
+	nominees = get_nominees(year)
+	# elif task == "dressed":
+	dressed = find_best_worst_dressed(tweets)
+
+	running= True
+	task = input("Enter task: 'hosts', 'awards', 'winners', 'presenters', 'nominees', or 'dressed'. Type 'end' to end.\n")
+
+	while running:
+		if task == 'hosts':
+			print(host)
+		elif task == 'awards':
+			for award in awards:
+				print(award)
+		elif task == 'winners':
+			for winner in winners:
+				print(winner)
+		elif task == 'presenters':
+			for presenter in presenters:
+				print(presenter)
+		elif task == 'nominees':
+			for nominee in nominees:
+				print(nominee)
+		elif task == 'dressed':
+			for dress in dressed:
+				print(dress)
+		elif task == 'end':
+			running = False
+			return
 
 	return
 
