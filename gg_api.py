@@ -118,18 +118,22 @@ def main():
   
   # data formatting
   results = {}
-  results['hosts'] = hosts
+  results['Host(s)'] = hosts
   
   for award in awards:
     award_winner = winners[award]
     award_presenter = presenters[award]
     award_nominees = nominees[award]
     award_dict = {}
-    award_dict['winners'] = award_winner
-    award_dict['presenters'] = award_presenter
-    award_dict['nominees'] = award_nominees
+    award_dict['Winner'] = award_winner
+    award_dict['Presenter(s)'] = award_presenter
+    award_dict['Nominees'] = award_nominees
     results[award] = award_dict
-    
+  
+  file = open("results.json", "w")
+  file.write(json.dumps(results))
+  file.close() 
+
   while running:
     task = input("Enter task: 'hosts', 'awards', 'winners', 'presenters', 'nominees', 'dressed', or 'all' to see the full list. Type 'end' to end.\n")
     if task == 'hosts':
@@ -181,6 +185,7 @@ def main():
 
   results = json.dumps(results)
   print (results)
+
   return results
 
 # helper functions

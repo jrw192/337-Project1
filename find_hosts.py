@@ -85,7 +85,6 @@ def find_host(tweets):
 			print(error)
 			return None
 
-	print(tallyDict)
 	val = max(tallyDict, key=tallyDict.get)
 	
 	count_temp = tallyDict[val]
@@ -94,11 +93,9 @@ def find_host(tweets):
 	newval = max(tallyDict, key=tallyDict.get)
 	if tallyDict[newval]  == count_temp:
 		if 'and' in val:
-			print(val)
 			return val
 	# print(tallyDict)
 	# print(val)
-	print(newval)
 	return newval
 
 
