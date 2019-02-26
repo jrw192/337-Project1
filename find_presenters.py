@@ -14,7 +14,7 @@ tt = TweetTokenizer()
 stop_words = list(stopwords.words("english")) + ['performance', ]
 
 
-def find_award_presenters(tweet_list, award):
+def find_award_presenters(tweet_list, award, winners):
 	#award_stripped = re.sub(r'[^\w\s]\s', '', award) #remove all non-alphanumeric
 	award_stripped = award
 	for word in stop_words:
@@ -47,7 +47,9 @@ def find_award_presenters(tweet_list, award):
 
 		people = find_all_names(tweet[:toIndex], known_names)
 		for person in people:
-			if person in nameFreqs:
+			if person in winners:
+				continue
+			elif person in nameFreqs:
 				nameFreqs[person] = nameFreqs[person] + 1
 			else:
 				nameFreqs[person] = 1
@@ -61,7 +63,7 @@ def find_award_presenters(tweet_list, award):
 
 
 #pass in all tweets, find the presenters associated with each award
-def find_presenters(tweet_list, awardsList):
+def find_presenters(tweet_list, awardsList, winners):
 	presenters = {} #presenters = { award_name : {people} }
 	#people = { person_name : count }
 	known_names = []
@@ -72,7 +74,7 @@ def find_presenters(tweet_list, awardsList):
 	presenter_tweets = filter_tweets_strings_remove(presenter_tweets, 'RT', caseSensitive=True)
 	#print(len(presenter_tweets))
 	for award in awardsList:
-		peopleFreqs = find_award_presenters(presenter_tweets, award)
+		peopleFreqs = find_award_presenters(presenter_tweets, award, winners)
 		presenters[award] = peopleFreqs
 		
 
@@ -81,8 +83,8 @@ def find_presenters(tweet_list, awardsList):
 
 	return presenters
 
-def find_all_presenters(tweet_list, awards_list):
-	possible_presenters = find_presenters(tweet_list, awards_list)
+def find_all_presenters(tweet_list, awards_list, winners):
+	possible_presenters = find_presenters(tweet_list, awards_list, winners)
 	final_presenters = {} #final result
 	#print(possible_presenters.keys())
 
