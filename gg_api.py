@@ -130,12 +130,15 @@ def main():
     award_dict['Nominees'] = award_nominees
     results[award] = award_dict
   
+  print("Saving results to results.json file")
   file = open("results.json", "w")
   file.write(json.dumps(results))
   file.close() 
 
+  results = json.dumps(results)
+
   while running:
-    task = input("Enter task: 'hosts', 'awards', 'winners', 'presenters', 'nominees', 'dressed', or 'all' to see the full list. Type 'end' to end.\n")
+    task = input("Enter task: 'hosts', 'awards', 'winners', 'presenters', 'nominees', or 'dressed', or 'all' to see the full list. Type 'end' to end.\n")
     if task == 'hosts':
       print("host(s): %s" % hosts)
       print("\n")
@@ -178,13 +181,10 @@ def main():
       print("\n")
 
     elif task == 'all':
-      print(get_human_readable_format(results, awards, dressed))
+      print(results)
 
     elif task == 'end':
       break
-
-  results = json.dumps(results)
-  print (results)
 
   return results
 
