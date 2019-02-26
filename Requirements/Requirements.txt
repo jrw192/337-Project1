@@ -1,0 +1,7 @@
+Requirements
+For manula installation (not using the command prompt):
+
+	Since we don't know what OS system you are running on, we can't provide you with direct files for manually downloading 
+each install. So this is the link for the nltk downlaod: https://pypi.org/project/nltk/#files
+Here is the link for the numPy download: https://pypi.org/project/numpy/#files
+Here is the link for the imdbPY download: https://pypi.org/project/IMDbPY/#files
