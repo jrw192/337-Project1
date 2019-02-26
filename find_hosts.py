@@ -16,9 +16,9 @@ def find_host(tweets):
 	#matches = matches[:40]
 	known_names = []
 
-	if len(matches) > 40: # randomize
+	if len(matches) > 50: # randomize
 		newList = []
-		while len(newList) < 40:
+		while len(newList) < 50:
 			newList.append(matches[randint(0, len(matches))])
 		matches = newList
 
