@@ -1,6 +1,7 @@
 '''Version 0.35'''
 
 import string
+import json
 
 #imports from other files
 from filtercategories_d import filter_tweets
@@ -23,11 +24,11 @@ OFFICIAL_AWARDS_1819 = ['best motion picture - drama', 'best motion picture - mu
 
 # if we can change parameters, delete this; otherwise, let's find a better option
 
-awards = {}
-nominees = {}
-winners = {}
-presenters = {}
-hosts = ""
+# awards = {}
+# nominees = {}
+# winners = {}
+# presenters = {}
+# hosts = ""
 
 def get_hosts(year):
 	'''Hosts is a list of one or more strings. Do NOT change the name
@@ -47,13 +48,13 @@ def get_awards(year):
 	return awards
 
 def get_nominees(year):
-	'''Nominees is a dictionary with the hard coded award
-	names as keys, and each entry a list of strings. Do NOT change
-	the name of this function or what it returns.'''
-	# Your code here
-	tweets = load_data(year)
-	nominees = find_all_nominees(tweets, awards)
-	return nominees
+  '''Nominees is a dictionary with the hard coded award
+  names as keys, and each entry a list of strings. Do NOT change
+  the name of this function or what it returns.'''
+  awards = get_awards(year)
+  tweets = load_data(year)
+  nominees = find_all_nominees(tweets, awards)
+  return nominees
 
 def get_winner(year):
 	'''Winners is a dictionary with the hard coded award
@@ -65,13 +66,14 @@ def get_winner(year):
 	return winners
 
 def get_presenters(year):
-	'''Presenters is a dictionary with the hard coded award
-	names as keys, and each entry a list of strings. Do NOT change the
-	name of this function or what it returns.'''
-	# Your code here
-	tweets = load_data(year)
-	presenters = find_all_presenters(tweets, awards, [])
-	return presenters
+  '''Presenters is a dictionary with the hard coded award
+  names as keys, and each entry a list of strings. Do NOT change the
+  name of this function or what it returns.'''
+  # Your code here
+  awards = get_awards(year)
+  tweets = load_data(year)
+  presenters = find_all_presenters(tweets, awards, awards)
+  return presenters
 
 def pre_ceremony():
 	'''This function loads/fetches/processes any data your program
@@ -84,88 +86,102 @@ def pre_ceremony():
 
 
 def main():
-	'''This function calls your program. Typing "python gg_api.py"
+  '''This function calls your program. Typing "python gg_api.py"
 	will run this function. Or, in the interpreter, import gg_api
 	and then run gg_api.main(). This is the second thing the TA will
 	run when grading. Do NOT change the name of this function or
 	what it returns.'''
+  year = input("Enter the year, then press enter:\n")
+  print("processing data.......give us a few minutes........")
+  tweets = load_data(year)
+  hosts = get_hosts(year)
+  print("host finding completed.")
 
-	year = input("Enter the year, then press enter:\n")
-	print("processing data.......give us a few minutes........")
-	tweets = load_data(year)
-	hosts = get_hosts(year)
-	# print(hosts)
-	print("host finding completed.")
+  awards = get_awards(year)
+  print("award finding completed.")
+  winners = get_winner(year)	
+  all_winners = []
+  for key in list(winners.keys()):
+    # print(key)
+    # print(winners[key])
+    all_winners.append(winners[key])
 
-	awards = get_awards(year)
-	print("award finding completed.")
+  print("winner finding completed.")
+  presenters = get_presenters(year)
+  print("presenter finding completed.")
+  nominees = get_nominees(year)
+  print("nominee finding completed.")
+  dressed = find_best_worst_dressed(tweets)
+  print("best dressed finding completed.")
+  print("\n")
+  running= True
+  
+  # data formatting
+  results = {}
+  results['hosts'] = hosts
+  
+  for award in awards:
+    award_winner = winners[award]
+    award_presenter = presenters[award]
+    award_nominees = nominees[award]
+    award_dict = {}
+    award_dict['winners'] = award_winner
+    award_dict['presenters'] = award_presenter
+    award_dict['nominees'] = award_nominees
+    results[award] = award_dict
+    
+  while running:
+    task = input("Enter task: 'hosts', 'awards', 'winners', 'presenters', 'nominees', 'dressed', or 'all' to see the full list. Type 'end' to end.\n")
+    if task == 'hosts':
+      print("host(s): %s" % hosts)
+      print("\n")
 
-	winners = get_winner(year)	
-	all_winners = []
-	for key in list(winners.keys()):
-		print(key)
-		print(winners[key])
-		all_winners.append(winners[key])
-	print("winner finding completed.")
+    elif task == 'awards':
+      print("the awards are: ")
+      for award in awards:
+        print(award)
+      print("\n")
 
-	presenters = find_all_presenters(tweets, awards, all_winners)
-	print("presenter finding completed.")
+    elif task == 'winners':
+      for award in winners:
+        print("winner for %s : %s" % (award, winners[award]))
+      print("\n")
 
-	nominees = get_nominees(year)
-	print("nominee finding completed.")
+    elif task == 'presenters':
+      for award in presenters:
+        print("presenters for %s are: " % award)
+        for person in presenters[award]:
+          if person == " ":
+            print("Not Found")
+          print(person)
+        print("\n")
+      print("\n")
 
-	dressed = find_best_worst_dressed(tweets)
-	print("best dressed finding completed.")
-	print("\n")
+    elif task == 'nominees':
+      for award in nominees:
+        print("nominees for %s are: " % award)
+        for person in nominees[award]:
+          print("\t" + person)
 
-	running= True
-	
+    elif task == 'dressed':
+      print("best dressed : ")
+      for person in dressed[0]:
+        print(person)
+      print("\n")
+      print("worst dressed : ")
+      for person in dressed[1]:
+        print(person)
+      print("\n")
 
-	while running:
-		task = input("Enter task: 'hosts', 'awards', 'winners', 'presenters', 'nominees', or 'dressed'. Type 'end' to end.\n")
-		if task == 'hosts':
-			print("host(s): %s" % hosts)
-			print("\n")
+    elif task == 'all':
+      print(get_human_readable_format(results, awards, dressed))
 
-		elif task == 'awards':
-			print("the awards are: ")
-			for award in awards:
-				print(award)
-			print("\n")
+    elif task == 'end':
+      break
 
-		elif task == 'winners':
-			for award in winners:
-				print("winner for %s : %s" % (award, winners[award]))
-			print("\n")
-
-		elif task == 'presenters':
-			for award in presenters:
-				print("presenters for %s are: " % award)
-				for person in presenters[award]:
-					if person == " ":
-						print("Not Found")
-					print(person)
-				print("\n")
-			print("\n")
-
-		elif task == 'nominees':
-			for award in nominees:
-				print("presenters for %s are: " % award)
-				for person in nominees[award]:
-					print(person)
-
-		elif task == 'dressed':
-			print("best dressed : ")
-			for person in dressed[0]:
-				print(person)
-			print("\n")
-			print("worst dressed : ")
-			for person in dressed[1]:
-				print(person)
-
-			print("\n")
-
-	return
+  results = json.dumps(results)
+  print (results)
+  return results
 
 # helper functions
 def get_human_readable_format(results_dict, award_dict, dressed_dict):
@@ -180,8 +196,8 @@ def get_human_readable_format(results_dict, award_dict, dressed_dict):
 		for category in category_types:
 			string_formatted += text_formatter_helper(category, results_dict[award][category])
 		string_formatted += "\n"
-	for category in extra_categories:
-		string_formatted += text_formatter_helper(category + " Dressed", dressed_dict[category])
+	for x in range(len(extra_categories)):
+		string_formatted += text_formatter_helper(extra_categories[x] + " Dressed", dressed_dict[x])
 
 	return string_formatted
 
@@ -192,7 +208,7 @@ def text_formatter_helper(cat_type, data):
 	elif isinstance(data, list):
 		for elem in data:
 			out_string += elem + ", "
-			out_string = out_string[:-2] + "\n" # remove comma space from last element
+		out_string = out_string[:-2] + "\n" # remove comma space from last element
 	return out_string
 
 
