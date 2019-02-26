@@ -16,9 +16,9 @@ def find_host(tweets):
 	#matches = matches[:40]
 	known_names = []
 
-	if len(matches) > 50: # randomize
+	if len(matches) > 40: # randomize
 		newList = []
-		while len(newList) < 50:
+		while len(newList) < 40:
 			newList.append(matches[randint(0, len(matches))])
 		matches = newList
 
@@ -85,10 +85,21 @@ def find_host(tweets):
 			print(error)
 			return None
 
+	print(tallyDict)
 	val = max(tallyDict, key=tallyDict.get)
+	
+	count_temp = tallyDict[val]
+	del tallyDict[val]
+
+	newval = max(tallyDict, key=tallyDict.get)
+	if tallyDict[newval]  == count_temp:
+		if 'and' in val:
+			print(val)
+			return val
 	# print(tallyDict)
 	# print(val)
-	return val
+	print(newval)
+	return newval
 
 
 if __name__ == "__main__":
