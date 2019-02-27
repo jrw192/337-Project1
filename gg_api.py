@@ -2,6 +2,7 @@
 
 import string
 import json
+import pprint
 
 #imports from other files
 from filtercategories_d import filter_tweets
@@ -30,120 +31,169 @@ OFFICIAL_AWARDS_1819 = ['best motion picture - drama', 'best motion picture - mu
 # presenters = {}
 # hosts = ""
 
+year = ""
 
 def get_hosts(year):
-	'''Hosts is a list of one or more strings. Do NOT change the name
-	of this function or what it returns.'''
-	# Your code here
+  '''Hosts is a list of one or more strings. Do NOT change the name
+  of this function or what it returns.'''
+  # Your code here
+  with open("results" + year + ".json", "r") as file:
+    data = json.load(file)
 
-	tweets = load_data(year)
-	hosts = find_host(tweets)
-	return hosts
+  hosts = data['Host']
+  return hosts
 
 def get_awards(year):
-	'''Awards is a list of strings. Do NOT change the name
-	of this function or what it returns.'''
-	# Your code here
-	tweets = load_data(year)
-	awards=categoriess(year)
-	return awards
+  '''Awards is a list of strings. Do NOT change the name
+  of this function or what it returns.'''
+  # Your code here
+  with open("foundawards" + year + ".json", "r") as file:
+    data = json.load(file)
+
+  foundawards = data['Found Awards']
+  return awards
 
 def get_nominees(year):
   '''Nominees is a dictionary with the hard coded award
   names as keys, and each entry a list of strings. Do NOT change
   the name of this function or what it returns.'''
-  awards = get_awards(year)
-  tweets = load_data(year)
-  nominees = find_all_nominees(tweets, awards)
+  with open("nominees" + year + ".json", "r") as file:
+    data = json.load(file)
+
+  nominees = data
   return nominees
 
 def get_winner(year):
-  awards=get_awards(year)
-  tweets=load_data(year)
-  winners=findwinner(awards,tweets)
+  '''Winners is a dictionary with the hard coded award
+  names as keys, and each entry containing a single string.
+  Do NOT change the name of this function or what it returns.'''
+  # Your code here
+  with open("winners" + year + ".json", "r") as file:
+    data = json.load(file)
+
+  winners = data
   return winners 
 
-# def get_winner(year):
-# 	'''Winners is a dictionary with the hard coded award
-# 	names as keys, and each entry containing a single string.
-# 	Do NOT change the name of this function or what it returns.'''
-# 	# Your code here
-#   awards=get_awards(year)
-#   # awards = get_awards(year)
-#   tweets = load_data(year)
-#   winners=findwinner(awards,tweets)
-#   return winners
-
 def get_presenters(year):
-  awards = get_awards(year)
-  tweets = load_data(year)
-  presenters = find_all_presenters(tweets, awards, awards)
+  '''Presenters is a dictionary with the hard coded award
+  names as keys, and each entry a list of strings. Do NOT change the
+  name of this function or what it returns.'''
+  # Your code here
+  with open("presenters" + year + ".json", "r") as file:
+    data = json.load(file)
+
+  presenters = data
   return presenters
 
 def pre_ceremony():
-	'''This function loads/fetches/processes any data your program
-	will use, and stores that data in your DB or in a json, csv, or
-	plain text file. It is the first thing the TA will run when grading.
-	Do NOT change the name of this function or what it returns.'''
-	# Your code here
-	print("Pre-ceremony processing complete.")
-	return
+  '''This function loads/fetches/processes any data your program
+  will use, and stores that data in your DB or in a json, csv, or
+  plain text file. It is the first thing the TA will run when grading.
+  Do NOT change the name of this function or what it returns.'''
+  # Your code here
+  print("Pre-ceremony processing complete.")
+  return
 
 
 def main():
   '''This function calls your program. Typing "python gg_api.py"
-	will run this function. Or, in the interpreter, import gg_api
-	and then run gg_api.main(). This is the second thing the TA will
-	run when grading. Do NOT change the name of this function or
-	what it returns.'''
+  will run this function. Or, in the interpreter, import gg_api
+  and then run gg_api.main(). This is the second thing the TA will
+  run when grading. Do NOT change the name of this function or
+  what it returns.'''
   year = input("Enter the year, then press enter:\n")
-  if year == 2018 or year == 2019:
-    awards= OFFICIAL_AWARDS_1819
-  elif year == 2013 or year == 2015:
-    awards = OFFICIAL_AWARDS_1315
-  else:
-    awards = get_awards(year)
   print("processing data.......give us a few minutes........")
   tweets = load_data(year)
-  hosts = get_hosts(year)
+
+  # Hosts
+  hosts = find_host(tweets)
   print("host finding completed.")
 
-  
+  # Awards
+  # Note: changed to found_awards (awards is now the default list to avoid cascading error)
+  found_awards=categoriess(year)
   print("award finding completed.")
-  winners = get_winner(year)	
-  all_winners = []
-  for key in list(winners.keys()):
-    # print(key)
-    # print(winners[key])
-    all_winners.append(winners[key])
 
+  # Setting up awards
+  awards = found_awards # in case the entered year is not one we have a hardcoded award list for
+  if year == 2018 or year == 2019:
+    awards = OFFICIAL_AWARDS_1819
+  elif year == 2013 or year == 2015:
+    awards = OFFICIAL_AWARDS_1315
+
+  # Winners
+  winners = {}
+  # winners=mains(year) 
+  # all_winners = []
+  # for key in list(winners.keys()):
+  #   # print(key)
+  #   # print(winners[key])
+  #   all_winners.append(winners[key])
   print("winner finding completed.")
-  presenters = get_presenters(year)
+
+  ###################################################
+  # Presenters
+  ###### TYPO?
+  presenters = find_all_presenters(tweets, awards, awards) # is this supposed to be (tweets, awards, winners)?
   print("presenter finding completed.")
-  nominees = get_nominees(year)
+  # Presenters
+  file = open("presenters" + year + ".json", "w")
+  file.write(json.dumps(presenters))
+  file.close() 
+  ###################################################
+  
+  # Nominees
+  nominees = find_all_nominees(tweets, awards)
   print("nominee finding completed.")
+
+  # Optional: Best/Worst Dressed
   dressed = find_best_worst_dressed(tweets)
   print("best dressed finding completed.")
   print("\n")
+
   running= True
-  
+
   # data formatting
   results = {}
   results['Host(s)'] = hosts
-  
+
+  awards_json = {}
+  awards_json['Found Awards'] = awards
+
   for award in awards:
-    award_winner = winners[award]
+    #award_winner = winners[award]
     award_presenter = presenters[award]
     award_nominees = nominees[award]
     award_dict = {}
-    award_dict['Winner'] = award_winner
+    #award_dict['Winner'] = award_winner
     award_dict['Presenter(s)'] = award_presenter
     award_dict['Nominees'] = award_nominees
     results[award] = award_dict
   
   print("Saving results to results.json file")
-  file = open("results.json", "w")
+  # All results
+  file = open("results" + year + ".json", "w")
   file.write(json.dumps(results))
+  file.close() 
+
+  # Awards
+  file = open("foundawards" + year + ".json", "w")
+  file.write(json.dumps(found_awards))
+  file.close() 
+
+  # Nominees
+  file = open("nominees" + year + ".json", "w")
+  file.write(json.dumps(nominees))
+  file.close() 
+
+  # Winners
+  file = open("winners" + year + ".json", "w")
+  file.write(json.dumps(winners))
+  file.close() 
+
+  # Presenters
+  file = open("presenters" + year + ".json", "w")
+  file.write(json.dumps(presenters))
   file.close() 
 
   results = json.dumps(results)
@@ -155,8 +205,8 @@ def main():
       print("\n")
 
     elif task == 'awards':
-      print("the awards are: ")
-      for award in awards:
+      print("the awards we found are: ")
+      for award in found_awards:
         print(award)
       print("\n")
 
@@ -201,32 +251,32 @@ def main():
 
 # helper functions
 def get_human_readable_format(results_dict, award_dict, dressed_dict):
-	category_types = ["presenters", "nominees", "winners"]
-	extra_categories = ["best", "worst"]
+  category_types = ["presenters", "nominees", "winners"]
+  extra_categories = ["best", "worst"]
 
-	string_formatted = text_formatter_helper("hosts", results_dict['hosts']) + "\n"
+  string_formatted = text_formatter_helper("hosts", results_dict['hosts']) + "\n"
 
-	for award in award_dict:
-		string_formatted += text_formatter_helper("award", award)
+  for award in award_dict:
+    string_formatted += text_formatter_helper("award", award)
 
-		for category in category_types:
-			string_formatted += text_formatter_helper(category, results_dict[award][category])
-		string_formatted += "\n"
-	for x in range(len(extra_categories)):
-		string_formatted += text_formatter_helper(extra_categories[x] + " Dressed", dressed_dict[x])
+    for category in category_types:
+      string_formatted += text_formatter_helper(category, results_dict[award][category])
+    string_formatted += "\n"
+  for x in range(len(extra_categories)):
+    string_formatted += text_formatter_helper(extra_categories[x] + " Dressed", dressed_dict[x])
 
-	return string_formatted
+  return string_formatted
 
 def text_formatter_helper(cat_type, data):
-	out_string = cat_type.capitalize() + ": "
-	if isinstance(data, str):
-		out_string += data + "\n"
-	elif isinstance(data, list):
-		for elem in data:
-			out_string += elem + ", "
-		out_string = out_string[:-2] + "\n" # remove comma space from last element
-	return out_string
+  out_string = cat_type.capitalize() + ": "
+  if isinstance(data, str):
+    out_string += data + "\n"
+  elif isinstance(data, list):
+    for elem in data:
+      out_string += elem + ", "
+    out_string = out_string[:-2] + "\n" # remove comma space from last element
+  return out_string
 
 
 if __name__ == '__main__':
-	main()
+  main()
