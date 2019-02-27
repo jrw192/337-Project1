@@ -136,10 +136,6 @@ def main():
   ###### TYPO?
   presenters = find_all_presenters(tweets, awards, awards) # is this supposed to be (tweets, awards, winners)?
   print("presenter finding completed.")
-  # Presenters
-  file = open("presenters" + year + ".json", "w")
-  file.write(json.dumps(presenters))
-  file.close() 
   ###################################################
   
   # Nominees
@@ -158,7 +154,7 @@ def main():
   results['Host(s)'] = hosts
 
   awards_json = {}
-  awards_json['Found Awards'] = awards
+  awards_json['Found Awards'] = found_awards  
 
   for award in awards:
     #award_winner = winners[award]
@@ -178,7 +174,12 @@ def main():
 
   # Awards
   file = open("foundawards" + year + ".json", "w")
-  file.write(json.dumps(found_awards))
+  file.write(json.dumps(awards_json))
+  file.close() 
+
+  # Presenters
+  file = open("presenters" + year + ".json", "w")
+  file.write(json.dumps(presenters))
   file.close() 
 
   # Nominees
