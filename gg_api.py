@@ -30,6 +30,7 @@ OFFICIAL_AWARDS_1819 = ['best motion picture - drama', 'best motion picture - mu
 # presenters = {}
 # hosts = ""
 
+
 def get_hosts(year):
 	'''Hosts is a list of one or more strings. Do NOT change the name
 	of this function or what it returns.'''
@@ -57,19 +58,23 @@ def get_nominees(year):
   return nominees
 
 def get_winner(year):
-	'''Winners is a dictionary with the hard coded award
-	names as keys, and each entry containing a single string.
-	Do NOT change the name of this function or what it returns.'''
-	# Your code here
-	tweets = load_data(year)
-	winners=mains(year)
-	return winners
+  awards=get_awards(year)
+  tweets=load_data(year)
+  winners=findwinner(awards,tweets)
+  return winners 
+
+# def get_winner(year):
+# 	'''Winners is a dictionary with the hard coded award
+# 	names as keys, and each entry containing a single string.
+# 	Do NOT change the name of this function or what it returns.'''
+# 	# Your code here
+#   awards=get_awards(year)
+#   # awards = get_awards(year)
+#   tweets = load_data(year)
+#   winners=findwinner(awards,tweets)
+#   return winners
 
 def get_presenters(year):
-  '''Presenters is a dictionary with the hard coded award
-  names as keys, and each entry a list of strings. Do NOT change the
-  name of this function or what it returns.'''
-  # Your code here
   awards = get_awards(year)
   tweets = load_data(year)
   presenters = find_all_presenters(tweets, awards, awards)
@@ -92,6 +97,10 @@ def main():
 	run when grading. Do NOT change the name of this function or
 	what it returns.'''
   year = input("Enter the year, then press enter:\n")
+  if year == 2018 or year == 2019:
+    awards= OFFICIAL_AWARDS_1819
+  else:
+    awards = OFFICIAL_AWARDS_1315
   print("processing data.......give us a few minutes........")
   tweets = load_data(year)
   hosts = get_hosts(year)

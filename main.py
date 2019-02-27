@@ -31,7 +31,8 @@ def main(year):
 	print('GETTING AWARDS')
 	awards=categoriess(year) #list of awards
 	print('GETTING WINNERS')
-	winners=mains(year) #dictionary, of awards keys with associated winners as values
+	winners=findwinner(awards,tweets)
+	# winners=mains(year) #dictionary, of awards keys with associated winners as values
 	
 	print('GETTING PRESENTERS')
 	presenters = find_all_presenters(tweets, awards) #returns dictionary, of awards keys with associated presenters as values
