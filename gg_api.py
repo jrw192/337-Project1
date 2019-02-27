@@ -99,14 +99,16 @@ def main():
   year = input("Enter the year, then press enter:\n")
   if year == 2018 or year == 2019:
     awards= OFFICIAL_AWARDS_1819
-  else:
+  elif year == 2013 or year == 2015:
     awards = OFFICIAL_AWARDS_1315
+  else:
+    awards = get_awards(year)
   print("processing data.......give us a few minutes........")
   tweets = load_data(year)
   hosts = get_hosts(year)
   print("host finding completed.")
 
-  awards = get_awards(year)
+  
   print("award finding completed.")
   winners = get_winner(year)	
   all_winners = []

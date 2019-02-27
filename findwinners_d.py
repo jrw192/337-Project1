@@ -19,10 +19,9 @@ from loaddatscategories_d import load_data
 from itertools import islice
 
 def findwinner(dicts, original):
-	# wins={}
-	# for i in dicts:
-	# 	if i[0] > limit and "#" not in i[1]:
-	# 		wins[i[1]]= ""
+	wins={}
+	for i in dicts:
+		wins[i]= ""
 
 	
 
