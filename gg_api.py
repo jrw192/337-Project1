@@ -40,7 +40,7 @@ def get_hosts(year):
   with open("results" + year + ".json", "r") as file:
     data = json.load(file)
 
-  hosts = data['Host']
+  hosts = data['Host(s)']
   return hosts
 
 def get_awards(year):
@@ -51,7 +51,7 @@ def get_awards(year):
     data = json.load(file)
 
   foundawards = data['Found Awards']
-  return awards
+  return foundawards
 
 def get_nominees(year):
   '''Nominees is a dictionary with the hard coded award
@@ -116,9 +116,9 @@ def main():
 
   # Setting up awards
   awards = found_awards # in case the entered year is not one we have a hardcoded award list for
-  if year == 2018 or year == 2019:
+  if year == '2018' or year == '2019':
     awards = OFFICIAL_AWARDS_1819
-  elif year == 2013 or year == 2015:
+  elif year == '2013' or year == '2015':
     awards = OFFICIAL_AWARDS_1315
 
   # Winners
@@ -134,10 +134,10 @@ def main():
   ###################################################
   # Presenters
   ###### TYPO?
-  presenters = find_all_presenters(tweets, awards, awards) # is this supposed to be (tweets, awards, winners)?
+  presenters = find_all_presenters(tweets, awards, winners) # is this supposed to be (tweets, awards, winners)?
   print("presenter finding completed.")
   ###################################################
-  
+
   # Nominees
   nominees = find_all_nominees(tweets, awards)
   print("nominee finding completed.")
