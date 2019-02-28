@@ -4,7 +4,7 @@
 from random import randint
 
 #imports from other files
-from filter_tweets import filter_tweets
+from filter_tweets import filter_tweets, filter_tweets_strings_remove
 from find_names import find_all_names
 
 
@@ -12,14 +12,16 @@ def find_host(tweets):
 
 	# get matches w host in tweet
 	matches = filter_tweets(tweets, 'host', False)
+	matches = filter_tweets_strings_remove(matches, 'present', False)
+	# print(len(matches)) #3109
 	# matches = filter_tweets(tweets, 'host', False)
-	#matches = matches[:40]
+	matches = matches[:1000]
 	known_names = []
 
 	if len(matches) > 40: # randomize
 		newList = []
 		while len(newList) < 40:
-			newList.append(matches[randint(0, len(matches))])
+			newList.append(matches[randint(0, len(matches)-1)])
 		matches = newList
 
 	# print(len(matches))
@@ -85,18 +87,23 @@ def find_host(tweets):
 			print(error)
 			return None
 
+	# print(tallyDict)
 	val = max(tallyDict, key=tallyDict.get)
+	# print(val)
 	
 	count_temp = tallyDict[val]
 	del tallyDict[val]
 
 	newval = max(tallyDict, key=tallyDict.get)
-	if tallyDict[newval]  == count_temp:
-		if 'and' in val:
-			return val
-	# print(tallyDict)
-	# print(val)
-	return newval
+
+	if 'and' in val:
+		return_list = val.split(' and ')
+		return return_list
+	elif 'and' in newval:
+		return_list = newval.split(' and ')
+		return return_list
+
+	return [val]
 
 
 if __name__ == "__main__":

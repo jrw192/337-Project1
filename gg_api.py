@@ -40,7 +40,7 @@ def get_hosts(year):
   with open("results" + year + ".json", "r") as file:
     data = json.load(file)
 
-  hosts = data['Host(s)']
+  hosts = data['Hosts']
   return hosts
 
 def get_awards(year):
@@ -151,7 +151,7 @@ def main():
 
   # data formatting
   results = {}
-  results['Host(s)'] = hosts
+  results['Hosts'] = hosts
 
   awards_json = {}
   awards_json['Found Awards'] = found_awards  
@@ -162,7 +162,7 @@ def main():
     award_nominees = nominees[award]
     award_dict = {}
     award_dict['Winner'] = award_winner
-    award_dict['Presenter(s)'] = award_presenter
+    award_dict['Presenters'] = award_presenter
     award_dict['Nominees'] = award_nominees
     results[award] = award_dict
   
@@ -190,11 +190,6 @@ def main():
   # Winners
   file = open("winners" + year + ".json", "w")
   file.write(json.dumps(winners))
-  file.close() 
-
-  # Presenters
-  file = open("presenters" + year + ".json", "w")
-  file.write(json.dumps(presenters))
   file.close() 
 
   results = json.dumps(results)

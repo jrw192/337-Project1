@@ -88,13 +88,13 @@ def findwinner(awards_list, tweet_list):
 # category - award names
 def goesto(texts): # category never used
 	winn=[]
-	winners=[]
-	newlist=[]
+	winn_bigrams=[]
 	index3=0
 	index4=0
 
 	stop_wordss=list(string.punctuation) + [" , ", "..." ,"…", "for", "RT", "go", "way", "SURPRISE", 'NOT',"A", "FUCK"]+list(stopwords.words("english"))
-	news=["BBC","FOX","ABC"]
+	# news=["BBC","FOX","ABC"]
+	news=[]
 
 	for text in texts:
 		text = tt.tokenize(text)
@@ -112,14 +112,18 @@ def goesto(texts): # category never used
 					elif "@" in i:
 						if "_" in i:
 							pass
-						else:
-							for j in news:
-								if j.upper() in i.upper():
-									pass
-								else:
-									winn.append(i)
+						# else:
+						# 	for j in news:
+						# 		if j.upper() in i.upper():
+						# 			pass
+						# 		else:
+						# 			winn.append(i)
 					else:
 						winn.append(i)
+						first_index = text.index(i) + 1
+						if first_index == len(text):
+							continue
+						winn_bigrams.append(i + " " + text[first_index])
 		else:
 			if "wins" in text:
 				index3=text.index("wins")
@@ -129,14 +133,18 @@ def goesto(texts): # category never used
 					elif "@" in i:
 						if "_" in i:
 							pass
-						else:
-							for j in news:
-								if j.upper() in i.upper():
-									pass
-								else:
-									winn.append(i)
+						# else:
+						# 	for j in news:
+						# 		if j.upper() in i.upper():
+						# 			pass
+						# 		else:
+						# 			winn.append(i)
 					else:
 						winn.append(i)
+						first_index = text.index(i) + 1
+						if first_index == len(text):
+							continue
+						winn_bigrams.append(i + " " + text[first_index])
 			if "won" in text:
 				index3=text.index("won")
 				for i in text[:(index3)]:
@@ -145,29 +153,81 @@ def goesto(texts): # category never used
 					elif "@" in i:
 						if "_" in i:
 							pass
-						else:
-							for j in news:
-								if j.upper() in i.upper():
-									pass
-								else:
-									winn.append(i)
+						# else:
+						# 	for j in news:
+						# 		if j.upper() in i.upper():
+						# 			pass
+						# 		else:
+						# 			winn.append(i)
 					else:
 						winn.append(i)
+						first_index = text.index(i) + 1
+						if first_index == len(text):
+							continue
+						winn_bigrams.append(i + " " + text[first_index])
 
 	winnerss={}
+	winn_bigramss={}
 	if not winn:
-		return "Winner Already Stated"
+		return "Winner not found"
 	for i in winn:
 		if i in winnerss:
 			winnerss[i]+=1
 		else:
 			winnerss[i]=0
 
-	#print(winnerss)
-
 	maximum= max(winnerss.values())
-	
 	winner_names = (" ".join([k for k, v in winnerss.items() if v == maximum])).replace("@","")
+
+	##########
+	### Bigram stuff. Comment out if too slow ###
+	if winn_bigrams:
+
+		count = 0
+		only_one = True
+		max_word = ""
+		for i in winnerss:
+			if winnerss[i] == maximum:
+				count = count + 1
+				max_word = i
+			if count > 1:
+				only_one = False
+				break
+
+		if only_one:
+			for i in winn_bigrams:
+				if i in winn_bigramss:
+					winn_bigramss[i]+=1
+				else:
+					winn_bigramss[i]=0
+			# print(winn_bigramss)
+
+			# get 2nd most popular word
+			del winnerss[max_word]
+
+			# maximum now 2nd most popular word
+			maximum= max(winnerss.values())
+
+			maximum_bigram = max(winn_bigramss.values())
+
+			count = 0
+			only_one = True
+			for i in winn_bigramss:
+				if winn_bigramss[i] == maximum_bigram:
+					count = count + 1
+					max_word = i
+				if count > 1:
+					only_one = False
+					break
+
+			if only_one:
+				if maximum_bigram == maximum:
+					# print(max_word)
+					return max_word
+
+	### Bigram stuff
+	##########
+	
 	return winner_names
 
 
