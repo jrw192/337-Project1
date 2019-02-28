@@ -8,7 +8,7 @@ import pprint
 from filtercategories_d import filter_tweets
 from loaddatscategories_d import load_data
 from findwinners_d import findwinner
-# from findawardcategories_d import mains
+from findawardcategories_d import mains
 from find_categories import categoriess
 from load_data import load_data
 from find_presenters import find_all_presenters
@@ -123,17 +123,18 @@ def main():
 
   # Winners
   winners = {}
-  
-  winners=findwinner(awards,tweets)
+  winners=findwinner(awards, tweets) 
   all_winners = []
   for key in list(winners.keys()):
+    # print(key)
+    # print(winners[key])
     all_winners.append(winners[key])
   print("winner finding completed.")
 
   ###################################################
   # Presenters
   ###### TYPO?
-  presenters = find_all_presenters(tweets, awards, all_winners) # is this supposed to be (tweets, awards, winners)?
+  presenters = find_all_presenters(tweets, awards, all_winners) 
   print("presenter finding completed.")
   ###################################################
 
@@ -156,11 +157,11 @@ def main():
   awards_json['Found Awards'] = found_awards  
 
   for award in awards:
-    #award_winner = winners[award]
+    award_winner = winners[award]
     award_presenter = presenters[award]
     award_nominees = nominees[award]
     award_dict = {}
-    #award_dict['Winner'] = award_winner
+    award_dict['Winner'] = award_winner
     award_dict['Presenter(s)'] = award_presenter
     award_dict['Nominees'] = award_nominees
     results[award] = award_dict
@@ -251,10 +252,10 @@ def main():
 
 # helper functions
 def get_human_readable_format(results_dict, award_dict, dressed_dict):
-  category_types = ["presenters", "nominees", "winners"]
+  category_types = ['Presenter(s)', 'Nominees', 'Winner']
   extra_categories = ["best", "worst"]
 
-  string_formatted = text_formatter_helper("hosts", results_dict['hosts']) + "\n"
+  string_formatted = text_formatter_helper("hosts", results_dict['Host(s)']) + "\n"
 
   for award in award_dict:
     string_formatted += text_formatter_helper("award", award)

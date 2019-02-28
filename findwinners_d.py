@@ -2,85 +2,79 @@ import nltk
 import string
 import re
 from nltk.tokenize import TweetTokenizer
-from nltk.tokenize import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords
-from nltk.stem import PorterStemmer
-from nltk.stem.wordnet import WordNetLemmatizer
-# from find_nominated_people import *
-# from find_names import *
-# from find_films import *
-# from find_hosts import *
-# from find_presenters import *
+
 
 
 #imports from other files
-from filtercategories_d import filter_tweets
-from loaddatscategories_d import load_data
-from itertools import islice
+from filter_tweets import *
 
-def findwinner(dicts, original):
+tt = TweetTokenizer()
+
+
+
+def findwinner(awards_list, tweet_list):
 	wins={}
-	for i in dicts:
-		wins[i]= ""
 
-	
+	# for each category
+	for i in awards_list:
+		# set strings to award name
+		# original_award_name = i
+		# if "–" in i:
+		# 	gemp= i.replace("– ", "")
+		# 	award_name=gemp
+		# else:
+		# 	award_name=original_award_name
 
-	strings=""
-	for i in wins:
-		h={}
-		if "–" in i:
-			gemp= i.replace("– ", "")
-			strings=gemp
-		else:
-			strings=i
+		# tokens=[] 
+		# splits=[]
+		# splits2=[]
+		# splits3=[]
 
-		tokens=[]
-		splits=[]
-		splits2=[]
-		splits3=[]
-		textss=""
-		splits=strings.split()
-		for word in strings.split():
-		 	splits2.append(word.lower())
-		splits3=" ".join(splits2)
+		# print ("award name: " + award_name)
+		# # clean award name formatting
+		# # award_name = 
+		# splits=award_name.split()
+		# for word in splits:
+		#  	splits2.append(word.lower())
+		# splits3=" ".join(splits2)
 
-		for token in original:
-			if (strings in " ".join(token)):
-				for j in token:
-					j=j.lower()
-				if "goes" in token and "to" in token and len(token)>2:
-					tokens.append(token)				
-				elif not tokens:
-					for j in token:
-						if j.lower() == "wins" or j.lower() == "won":
-							tokens.append(token)
+		# # filter tweets for relevant tweet
+		# for token in tweet_list:
+		# 	# first check if award name in tweet
+		# 	if (award_name in " ".join(token)):
+		# 		# set each word to lowercase
+		# 		for j in token:
+		# 			j=j.lower()
+		# 		print ("tweet: " + token)
+		# 		# check if "goes" "to" "wins" or "won" is in it and add tweet to tokens list
+		# 		if "goes" in token and "to" in token and len(token)>2:
+		# 			tokens.append(token)				
+		# 		elif not tokens:
+		# 			for j in token:
+		# 				if j.lower() == "wins" or j.lower() == "won":
+		# 					tokens.append(token)
+		# 	elif (splits3 in " ".join(token)):
+		# 		for j in token:
+		# 			j=j.lower()
+		# 		if "goes" in token and "to" in token and len(token)>2:
+		# 			tokens.append(j)		
+		# 		elif not tokens:
+		# 			for j in token:
+		# 				if j.lower() == "wins" or j.lower() == "won":
+		# 					tokens.append(j)
+		# 		elif "tv" in splits3:
+		# 			if "goes" in token and "to" in token and len(token)>2:
+		# 				for j in token:
+		# 					if "tv" == j or "television" ==j:
+		# 						tokens.append(token)
 				#textss=textss.append(token)
-			elif (splits3 in " ".join(token)):
-				for j in token:
-					j=j.lower()
-				if "goes" in token and "to" in token and len(token)>2:
-					tokens.append(j)		
-				elif not tokens:
-					for j in token:
-						if j.lower() == "wins" or j.lower() == "won":
-							tokens.append(j)
-				elif "tv" in splits3:
-					if "goes" in token and "to" in token and len(token)>2:
-						for j in token:
-							if "tv" == j or "television" ==j:
-								tokens.append(token)
-				#textss=textss.append(token)
 
-		#sending it off to the other functions, turning it into one long string of texts so other functions can read it
-		# textss is all the tweets that talk about each category and ptextss is just a copy of what's in textss
-		#uncomment below for other functions
-		# ptextss=""
-		# for i in textss:
-		# 	for j in i:
-		# 		ptextss=" ".join(j)
-		# ptextss+=ptextss
+		tweet_list_text = [tweet['text'] for tweet in tweet_list]
+		# print (tweet_list_text)
+		tweets = find_tweets_of_award(tweet_list_text, i)
 
-		wins[i]=goesto(tokens, strings)
+		wins[i]=goesto(tweets)
 			#uncomment below to see for other functions, 
 			# "Nominees" : find_nominees(ptextss)
 			# "Presenters":associate_presenters_awards(ptextss)
@@ -90,21 +84,20 @@ def findwinner(dicts, original):
 
 
 
-	
-def goesto(texts, category):
-
+# texts - tweet list
+# category - award names
+def goesto(texts): # category never used
 	winn=[]
 	winners=[]
 	newlist=[]
-	inde=0
 	index3=0
 	index4=0
-	index5=0
-	index6=0
 
 	stop_wordss=list(string.punctuation) + [" , ", "..." ,"…", "for", "RT", "go", "way", "SURPRISE", 'NOT',"A", "FUCK"]+list(stopwords.words("english"))
 	news=["BBC","FOX","ABC"]
+
 	for text in texts:
+		text = tt.tokenize(text)
 		for low in text:
 			low=low.lower()
 		
@@ -130,7 +123,6 @@ def goesto(texts, category):
 		else:
 			if "wins" in text:
 				index3=text.index("wins")
-		#print(text)"Wo"
 				for i in text[:(index3)]:
 					if "#"  in i or "http" in i or i in stop_wordss:
 						pass
@@ -162,15 +154,10 @@ def goesto(texts, category):
 					else:
 						winn.append(i)
 
-
-
 	winnerss={}
-	
-
 	if not winn:
 		return "Winner Already Stated"
 	for i in winn:
-
 		if i in winnerss:
 			winnerss[i]+=1
 		else:
@@ -181,11 +168,22 @@ def goesto(texts, category):
 	maximum= max(winnerss.values())
 	
 	winner_names = (" ".join([k for k, v in winnerss.items() if v == maximum])).replace("@","")
-	
-		
-
-	#print(winner_names)
-
-
-
 	return winner_names
+
+
+def find_tweets_of_award(tweet_list, award):
+	stop_words = list(stopwords.words("english"))+ ['performance',] #'golden', 'globes', 'best', 'wow', 'excellent', 'great', 'whoo', 'yay', 'winner', 'actor', 'actress' ]
+
+	award_stripped = award
+	for word in stop_words:
+		award_stripped = award_stripped.replace(" " + word + " ", ' ')
+	award_no_punct = re.sub(r'[^\w\s]', '', award_stripped)
+
+	award_tokenized = tt.tokenize(award_no_punct)
+	tweets = tweet_list
+	for token in award_tokenized:
+		filtered = filter_tweets_text(tweets, token, caseSensitive=False)
+		if len(filtered) > 0:
+			tweets = filtered
+
+	return tweets
