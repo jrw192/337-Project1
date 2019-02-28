@@ -15,6 +15,7 @@ tt = TweetTokenizer()
 
 def findwinner(awards_list, tweet_list):
 	wins={}
+	tweet_list_text = [tweet['text'] for tweet in tweet_list]
 
 	# for each category
 	for i in awards_list:
@@ -70,7 +71,6 @@ def findwinner(awards_list, tweet_list):
 		# 						tokens.append(token)
 				#textss=textss.append(token)
 
-		tweet_list_text = [tweet['text'] for tweet in tweet_list]
 		# print (tweet_list_text)
 		tweets = find_tweets_of_award(tweet_list_text, i)
 
