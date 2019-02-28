@@ -124,17 +124,17 @@ def main():
   # Winners
   winners = {}
   # winners=mains(year) 
-  # all_winners = []
-  # for key in list(winners.keys()):
-  #   # print(key)
-  #   # print(winners[key])
-  #   all_winners.append(winners[key])
+  all_winners = []
+  for key in list(winners.keys()):
+    # print(key)
+    # print(winners[key])
+    all_winners.append(winners[key])
   print("winner finding completed.")
 
   ###################################################
   # Presenters
   ###### TYPO?
-  presenters = find_all_presenters(tweets, awards, winners) # is this supposed to be (tweets, awards, winners)?
+  presenters = find_all_presenters(tweets, awards, all_winners) # is this supposed to be (tweets, awards, winners)?
   print("presenter finding completed.")
   ###################################################
 
