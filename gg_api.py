@@ -8,7 +8,7 @@ import pprint
 from filtercategories_d import filter_tweets
 from loaddatscategories_d import load_data
 from findwinners_d import findwinner
-from findawardcategories_d import mains
+# from findawardcategories_d import mains
 from find_categories import categoriess
 from load_data import load_data
 from find_presenters import find_all_presenters
@@ -123,11 +123,10 @@ def main():
 
   # Winners
   winners = {}
-  # winners=mains(year) 
+  
+  winners=findwinner(awards,tweets)
   all_winners = []
   for key in list(winners.keys()):
-    # print(key)
-    # print(winners[key])
     all_winners.append(winners[key])
   print("winner finding completed.")
 

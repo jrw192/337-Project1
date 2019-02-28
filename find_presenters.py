@@ -27,7 +27,7 @@ def find_award_presenters(tweet_list, award, winners):
 	for token in award_tokenized:
 		#print(token)
 		filtered = filter_tweets_text(tweets, token, caseSensitive=False)
-		if len(filtered) > 0:
+		if len(filtered) > 1:
 			tweets = filtered
 
 	#tweets = filter_tweets_text(tweet_list, award_stripped, caseSensitive=False) + filter_tweets_text(tweet_list, award, caseSensitive=False) + filter_tweets_text(tweet_list, award_no_punct, caseSensitive=False)
